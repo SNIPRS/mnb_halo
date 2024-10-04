@@ -18,6 +18,15 @@ def displacement(x, y, xp, yp):
     mag = np.sqrt((x - xp)**2 + (y - yp)**2)
     return (xp - x)/mag, (yp - y)/mag, mag
 
+class Weapon: # Placeholder MA5B
+    def __init__(self):
+        self.mag_cap = 60 # Maximum magazine capacity
+        self.firerate = 20 # Rounds per second
+        self.spread = 1 # Character radius units
+        self.damage = 10 # Damage
+        self.AP_multiplier = 0.2 # Damage vs. armour
+        
+
 class Character(pygame.sprite.Sprite):
     def __init__(self, colour, width, height):
         pygame.sprite.Sprite.__init__(self)
@@ -28,7 +37,7 @@ class Character(pygame.sprite.Sprite):
 
         self.x, self.y = self.rect.x, self.rect.y
         self.dstx, self.dsty = self.rect.x, self.rect.y
-        self.speed = 0.2
+        self.speed = 1
 
     def move(self):
         MOVE_THRESHOLD = 3
