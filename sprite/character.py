@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 
 import G
-from utils import displacement, center_rect
+from utils import displacement, center_rect, rect_center
 from sprite.firing_effect import FiringEffect
 from weapons.weapon import Weapon
 
@@ -33,7 +33,7 @@ class Character(pygame.sprite.Sprite):
                 self.dstx, self.dsty = center_rect(self.rect, event.pos[0], event.pos[1])
         self.move()
         self.draw()
-        self.weapon.frame((self.x, self.y), (G.WIDTH//2, G.HEIGHT//2))
+        self.weapon.frame(rect_center(self.rect), (G.WIDTH//2, G.HEIGHT//2))
 
     def hit(self, x: float, y: float, dmg: float, r: float=0):
         # Check if character has been hit
@@ -55,6 +55,11 @@ class Character(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = int(self.x), int(self.y)
         G.WINDOW.blit(self.image,(self.rect.x, self.rect.y))
 
+
+class Enemy(Character):
+    def __init__(self, colour, width: float, height: float):
+        super().__init__(colour=colour, width=width, height=height)
+        
 
 class CharacterGroup(pygame.sprite.Group):
     def hit(self):

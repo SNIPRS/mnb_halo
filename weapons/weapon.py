@@ -16,12 +16,12 @@ class Weapon: # Placeholder MA5B
         self.spread = 1 # Character radius units
         self.damage = 10 # Damage
         self.AP_multiplier = 0.2 # Damage vs. armour
-        self.error = 2 # Error angle in degrees
+        self.error = 3 # Error angle in degrees
         self.aim_time = 1 # Seconds, takes this long to aim before firing
         self.reload_time = (5, 7) # Seconds: min, max
-        self.burst_range = (15, 30) # min, max
-        self.subburst_probability = 0.01
-        self.subburst_delay = (1, 3) # Seconds: min, max
+        self.burst_range = (5, 20) # min, max
+        self.subburst_probability = 0.1
+        self.subburst_delay = (0.2, 2) # Seconds: min, max
         self.spread_heat = 1 # Spread increase per shot
 
         self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
