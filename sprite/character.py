@@ -5,7 +5,7 @@ import G
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, colour, width: float, height: float):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(colour)
         self.rect = self.image.get_rect()
