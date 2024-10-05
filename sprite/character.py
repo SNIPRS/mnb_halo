@@ -23,7 +23,6 @@ class Character(pygame.sprite.Sprite):
         self.weapon = Weapon()
 
     def frame(self):
-        global EVENTS
         for event in G.EVENTS:
             if (not self.selected and event.type == pygame.MOUSEBUTTONDOWN and
                 event.button == 1 and self.rect.collidepoint(event.pos)):

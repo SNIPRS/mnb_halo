@@ -28,7 +28,7 @@ def main():
         test.frame()
 
         pygame.display.update()
-        G.CLOCK.tick(60)
+        G.CLOCK.tick(G.FPS)
 
 if __name__ == '__main__':
     main()

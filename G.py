@@ -13,4 +13,5 @@ FIRING_EFFECTS = pygame.sprite.Group()
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 CLOCK = pygame.time.Clock()
+FPS = 60
 EVENTS = pygame.event.get()
