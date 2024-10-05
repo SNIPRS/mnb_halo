@@ -16,13 +16,16 @@ class Weapon: # Placeholder MA5B
         self.spread = 1 # Character radius units
         self.damage = 10 # Damage
         self.AP_multiplier = 0.2 # Damage vs. armour
-        self.error = 1 # Error angle in degrees
+        self.error = 2 # Error angle in degrees
         self.aim_time = 1 # Seconds, takes this long to aim before firing
         self.reload_time = (5, 7) # Seconds: min, max
-        self.burst_range = (2, 15) # min, max
-        self.subburst_probability = 0.1
+        self.burst_range = (15, 30) # min, max
+        self.subburst_probability = 0.01
         self.subburst_delay = (1, 3) # Seconds: min, max
         self.spread_heat = 1 # Spread increase per shot
+
+        self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
+        self.reload_sound = pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
 
         # State variables
         self.mag = self.mag_cap
@@ -60,8 +63,8 @@ class Weapon: # Placeholder MA5B
 
         else:
             self.reload_timer = max(0, self.reload_timer-1)
-            if self.reload_timer <= 0:
-                self.mag = self.mag_cap
+            if self.reload_timer == 0 and self.mag <= 0:
+                self._reload()
 
     def _target_point(self, start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[float, float]:
         dis, _, _ = displacement(start, end)
@@ -72,9 +75,14 @@ class Weapon: # Placeholder MA5B
 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
         # Fires a single shot
-        pygame.mixer.Sound.play(pygame.mixer.Sound("./assets/sounds/ar_fire.wav"))
+        G.PLAY_SOUND(self.fire_sound)
         eff = FiringEffect(start, end)
         G.FIRING_EFFECTS.add(eff)
+
+    def _reload(self):
+        if self.mag != self.mag_cap:
+            G.PLAY_SOUND(self.reload_sound)
+        self.mag = self.mag_cap
 
     def _reset_burst(self):
         self.firing_timer = self.aim_time*G.FPS
