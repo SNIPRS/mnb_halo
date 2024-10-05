@@ -1,7 +1,10 @@
 import pygame
 import numpy as np
-from utils import displacement, center_rect
+
 import G
+from utils import displacement, center_rect
+from firing_effect import FiringEffect
+from weapons.weapon import Weapon
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, colour, width: float, height: float):
@@ -17,18 +20,7 @@ class Character(pygame.sprite.Sprite):
 
         self.health = 100
         self.hitbox_radius = (self.rect.width + self.rect.height)/4
-
-    def move(self):
-        MOVE_THRESHOLD = 3
-        dis, dx, dy = displacement(self.x, self.y, self.dstx, self.dsty)
-        if dis <= MOVE_THRESHOLD:
-            return
-        self.x += dx * self.speed
-        self.y += dy * self.speed
-
-    def draw(self):
-        self.rect.x, self.rect.y = int(self.x), int(self.y)
-        G.WINDOW.blit(self.image,(self.rect.x, self.rect.y))
+        self.weapon = Weapon()
 
     def frame(self):
         global EVENTS
@@ -43,11 +35,27 @@ class Character(pygame.sprite.Sprite):
         self.move()
         self.draw()
 
-    def hit(self, x: float, y: float, dmg: float):
+    def hit(self, x: float, y: float, dmg: float, r: float=0):
+        # Check if character has been hit
         mag, _, _,  = displacement(self.x, self.y, x, y)
         if mag <= self.hitbox_radius:
             self.health -= dmg
             print(self.health)
+
+    def move(self):
+        # Moves a single step towards destination
+        MOVE_THRESHOLD = 3
+        dis, dx, dy = displacement(self.x, self.y, self.dstx, self.dsty)
+        if dis <= MOVE_THRESHOLD:
+            return
+        self.x += dx * self.speed
+        self.y += dy * self.speed
+
+    def draw(self):
+        self.rect.x, self.rect.y = int(self.x), int(self.y)
+        G.WINDOW.blit(self.image,(self.rect.x, self.rect.y))
+
+
 
 class CharacterGroup(pygame.sprite.Group):
     def hit(self):

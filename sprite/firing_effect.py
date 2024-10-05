@@ -4,7 +4,7 @@ import G
 from typing import Tuple
 
 class FiringEffect(pygame.sprite.Sprite):
-    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], cnt_frame: int):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], cnt_frame: int=0):
         super().__init__()
         self.start = start
         self.end = end

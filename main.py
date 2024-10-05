@@ -22,7 +22,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        G.WINDOW.fill('white')
+        G.WINDOW.fill(G.BACKGROUND_COL)
 
         # update character state
         test.frame()
