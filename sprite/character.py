@@ -3,7 +3,7 @@ import numpy as np
 
 import G
 from utils import displacement, center_rect
-from firing_effect import FiringEffect
+from sprite.firing_effect import FiringEffect
 from weapons.weapon import Weapon
 
 class Character(pygame.sprite.Sprite):
@@ -33,10 +33,11 @@ class Character(pygame.sprite.Sprite):
                 self.dstx, self.dsty = center_rect(self.rect, event.pos[0], event.pos[1])
         self.move()
         self.draw()
+        self.weapon.frame((self.x, self.y), (G.WIDTH//2, G.HEIGHT//2))
 
     def hit(self, x: float, y: float, dmg: float, r: float=0):
         # Check if character has been hit
-        mag, _, _,  = displacement(self.x, self.y, x, y)
+        mag, _, _,  = displacement((self.x, self.y), (x, y))
         if mag <= self.hitbox_radius:
             self.health -= dmg
             print(self.health)
@@ -44,7 +45,7 @@ class Character(pygame.sprite.Sprite):
     def move(self):
         # Moves a single step towards destination
         MOVE_THRESHOLD = 3
-        dis, dx, dy = displacement(self.x, self.y, self.dstx, self.dsty)
+        dis, dx, dy = displacement((self.x, self.y), (self.dstx, self.dsty))
         if dis <= MOVE_THRESHOLD:
             return
         self.x += dx * self.speed
@@ -53,7 +54,6 @@ class Character(pygame.sprite.Sprite):
     def draw(self):
         self.rect.x, self.rect.y = int(self.x), int(self.y)
         G.WINDOW.blit(self.image,(self.rect.x, self.rect.y))
-
 
 
 class CharacterGroup(pygame.sprite.Group):

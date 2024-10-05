@@ -16,10 +16,10 @@ class FiringEffect(pygame.sprite.Sprite):
         self.done = False
 
     def frame(self):
-        if self.cnt_frames == 0:
+        if self.cnt_frames <= 0:
             self.apply()
         self.cnt_frames -= 1
-        if self.cnt_frames <= -1:
+        if self.cnt_frames <= -2:
             self.kill()
 
     def apply(self):
