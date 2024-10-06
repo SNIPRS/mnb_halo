@@ -13,3 +13,6 @@ def rect_center(rect: pygame.Rect) -> Tuple[float, float]:
 def displacement(start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[float, float, float]:
     mag = np.sqrt((start[0] - end[0])**2 + (start[1] - end[1])**2)
     return mag, (end[0] - start[0])/(mag+0.000001), (end[1] - start[1])/(mag+0.000001)
+
+def distance(start: Tuple[float, float], end: Tuple[float, float]) -> float:
+    return np.sqrt((start[0] - end[0])**2 + (start[1] - end[1])**2)

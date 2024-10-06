@@ -28,6 +28,6 @@ class FiringEffect(pygame.sprite.Sprite):
         self.done = True
 
     def damage(self):
-        for c in G.CHARACTERS:
+        for c in G.CHARS_ALL:
             if 'hit' in c.__dict__:
                 c.hit(self.end[0], self.end[1], self.dmg)

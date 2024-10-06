@@ -19,8 +19,8 @@ class Weapon: # Placeholder MA5B
         self.error = 3 # Error angle in degrees
         self.aim_time = 1 # Seconds, takes this long to aim before firing
         self.reload_time = (5, 7) # Seconds: min, max
-        self.burst_range = (5, 20) # min, max
-        self.subburst_probability = 0.1
+        self.burst_range = (4, 16) # min, max
+        self.subburst_probability = 0.0
         self.subburst_delay = (0.2, 2) # Seconds: min, max
         self.spread_heat = 1 # Spread increase per shot
 
