@@ -8,7 +8,18 @@ import G
 from utils import displacement
 from sprite.firing_effect import FiringEffect
 
-class Weapon: # Placeholder MA5B
+class Weapon:
+    def __init__(self):
+        self.firing = False
+        self.cooldown = [1, 1]
+
+    def start_burst(self):
+        pass
+
+    def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
+        pass
+
+class AssaultRifle(Weapon): # Placeholder MA5B
     def __init__(self):
         # Constants
         self.mag_cap = 60 # Maximum magazine capacity

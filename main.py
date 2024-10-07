@@ -7,11 +7,11 @@ import numpy as np
 
 from utils import center_rect, displacement
 import G
-from ai.character_ai import CharacterAI, ControllableCharacterAI
+from ai.character_ai import EnemyCharacterAI, ControllableCharacterAI
 
 pygame.display.set_caption('mnb_halo')
 player = ControllableCharacterAI()
-G.CHARS_ALL.add(player.character)
+enemy = EnemyCharacterAI()
 
 def main():
     looping = True
@@ -26,6 +26,8 @@ def main():
 
         # update character state
         player.frame()
+        enemy.frame()
+
         for eff in G.FIRING_EFFECTS:
             eff.frame()
 

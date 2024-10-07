@@ -57,6 +57,7 @@ class Character(pygame.sprite.Sprite):
 class Enemy(Character):
     def __init__(self, colour, width: float, height: float):
         super().__init__(colour=colour, width=width, height=height)
+        self.faction = 1
         
 
 class CharacterGroup(pygame.sprite.Group):
