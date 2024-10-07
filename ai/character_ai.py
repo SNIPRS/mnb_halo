@@ -18,6 +18,8 @@ class CharacterAI:
     def frame(self):
         self._update_pos()
         self.char.frame()
+        if not self.weapon_manager.firing or self.char.shoot_while_move:
+            self.char.move()
         self.weapon_manager.frame()
 
     def _update_pos(self):

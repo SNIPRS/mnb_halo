@@ -23,15 +23,15 @@ class AssaultRifle(Weapon): # Placeholder MA5B
     def __init__(self):
         # Constants
         self.mag_cap = 60 # Maximum magazine capacity
-        self.firerate = 20 # Rounds per second
-        self.error = 3 # Error angle in degrees
-        self.aim_time = 1 # Seconds, takes this long to aim before firing
-        self.reload_time = (5, 7) # Seconds: min, max
+        self.firerate = G.FPS // 20 # Rounds per second
+        self.error = 5 # Error angle in degrees
+        self.aim_time = 1 * G.FPS # Takes this long to aim before firing
+        self.reload_time = (int(5*G.FPS), int(7*G.FPS)) # Seconds: min, max
         self.burst_range = (4, 16) # min, max
         self.subburst_probability = 0.05
-        self.subburst_delay = (0.2, 2) # Seconds: min, max
+        self.subburst_delay = (int(0.2*G.FPS), int(0.5*G.FPS)) # Seconds: min, max
         self.spread_heat = 1 # Spread increase per shot
-        self.cooldown = [3*G.FPS, 6*G.FPS] # Time to wait after a burst
+        self.cooldown = [int(3*G.FPS), int(6*G.FPS)] # Time to wait after a burst
         self.shot_effect = BulletEffect
 
         self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
@@ -40,7 +40,7 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         # State variables
         self.spread = self.error
         self.mag = self.mag_cap
-        self.firing_timer = self.aim_time*G.FPS
+        self.firing_timer = self.aim_time
         self.reload_timer = 0
         self.firing = False
         self.burst = min(self.mag, randint(*self.burst_range))
@@ -59,12 +59,12 @@ class AssaultRifle(Weapon): # Placeholder MA5B
                 self.burst -= 1
                 self.mag -= 1
                 subburst = random() <= self.subburst_probability
-                self.firing_timer = G.FPS//self.firerate + int(uniform(*self.subburst_delay)*G.FPS) if subburst \
-                    else G.FPS//self.firerate
+                self.firing_timer = self.firerate + randint(*self.subburst_delay) if subburst \
+                    else self.firerate
                 self.spread = self.error if subburst else self.spread + self.spread_heat
             if self.mag <= 0:
                 self.firing = False
-                self.reload_timer = int(uniform(*self.reload_time)*G.FPS)
+                self.reload_timer = randint(*self.reload_time)
                 return
             if self.burst <= 0:
                 self.firing = False
@@ -98,7 +98,7 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         self.mag = self.mag_cap
 
     def _reset_burst(self):
-        self.firing_timer = self.aim_time*G.FPS
+        self.firing_timer = self.aim_time
         self.burst = min(self.mag, randint(*self.burst_range))
 
 
@@ -107,13 +107,13 @@ class PlasmaRifle(AssaultRifle):
         super().__init__()
         # Constants
         self.mag_cap = 100 # Maximum magazine capacity
-        self.firerate = 8 # Rounds per second
-        self.error = 3 # Error angle in degrees
-        self.aim_time = 2 # Seconds, takes this long to aim before firing
-        self.reload_time = (0, 1) # Seconds: min, max
+        self.firerate = G.FPS // 8 # Rounds per second
+        self.error = 6 # Error angle in degrees
+        self.aim_time = 2 * G.FPS # Seconds, takes this long to aim before firing
+        self.reload_time = (int(0*G.FPS), int(1*G.FPS)) # Seconds: min, max
         self.burst_range = (2, 8) # min, max
         self.subburst_probability = 0.25
-        self.subburst_delay = (0.2, 2) # Seconds: min, max
+        self.subburst_delay = (int(0.2*G.FPS), int(2*G.FPS)) # Seconds: min, max
         self.spread_heat = 1 # Spread increase per shot
         self.cooldown = [5*G.FPS, 10*G.FPS] # Time to wait after a burst
         self.shot_effect = ProjectileEffect
@@ -124,7 +124,7 @@ class PlasmaRifle(AssaultRifle):
         # State variables
         self.spread = self.error
         self.mag = self.mag_cap
-        self.firing_timer = self.aim_time*G.FPS
+        self.firing_timer = self.aim_time
         self.reload_timer = 0
         self.firing = False
         self.burst = min(self.mag, randint(*self.burst_range))

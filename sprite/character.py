@@ -24,9 +24,9 @@ class Character(pygame.sprite.Sprite):
         self.spotting_range = 800
         self.spotted_chance = 1
         self.faction = 0
+        self.shoot_while_move = False
 
     def frame(self):
-        self.move()
         self.draw()
 
     def hit(self, origin: Tuple[float, float], dmg: float, r: float=0):
