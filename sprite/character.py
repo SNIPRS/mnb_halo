@@ -21,6 +21,7 @@ class Character(pygame.sprite.Sprite):
         # Usage
         self.speed = 1
         self.health = 100
+        self.morale = 100
         self.spotting_range = 800
         self.spotted_chance = 1
         self.faction = 0

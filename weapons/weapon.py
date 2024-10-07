@@ -51,6 +51,10 @@ class AssaultRifle(Weapon): # Placeholder MA5B
             self._reset_burst()
             self.firing = True
 
+    def stop_burst(self):
+        self.firing = False
+        self._reset_burst()
+
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         if self.firing:
             if self.firing_timer <= 0 and self.burst > 0 and start is not None and end is not None:

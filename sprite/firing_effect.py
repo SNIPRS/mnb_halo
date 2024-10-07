@@ -4,7 +4,7 @@ from math import ceil
 from typing import Tuple, Optional
 
 import G
-from utils import displacement
+from utils import displacement, rect_center
 
 class Effect(pygame.sprite.Sprite):
     def __init__(self, start: Tuple[float, float], end: Optional[Tuple[float, float]] = None,
@@ -37,6 +37,7 @@ class BulletEffect(Effect):
         self.done = False
 
     def apply(self):
+        pygame.draw.line(G.WINDOW, (255, 255, 255), self.start, self.end, 2)
         pygame.draw.line(G.WINDOW, self.colour, self.start, self.end, self.width)
         self._damage()
         self.done = True
@@ -47,14 +48,11 @@ class ProjectileEffect(Effect):
         self.colour = (100, 100, 255)
         self.dmg = 30
         self.drawr = 3
-        self.x = start[0]
-        self.y = start[1]
+        self.x, self.y = start
         self.speed = 5
         self.done = False
-        dis, dx, dy = displacement(start, end)
+        dis, self.dx, self.dy = displacement(start, end)
         self.apply_frames = ceil(dis/self.speed)
-        self.dx = dx 
-        self.dy = dy
 
     def frame(self):
         if self.initial_delay > 0:
@@ -70,3 +68,17 @@ class ProjectileEffect(Effect):
             self._damage()
             self.done = True
             self.kill()
+
+class TrackingEffect(Effect):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
+                 target: pygame.Rect = None):
+        self.colour = (255, 100, 100)
+        self.dmg = 30
+        self.drawr = 3
+        self.x, self.y = start
+        self.speed = 5
+        self.done = False
+
+        self.xp, self.yp = rect_center(target)
+        self.dx, self.dy = end[0] - self.xp, 
+
