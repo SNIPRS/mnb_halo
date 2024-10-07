@@ -3,8 +3,6 @@ import numpy as np
 
 import G
 from utils import displacement, center_rect, rect_center
-from weapons.weapon import Weapon
-from weapons.spotter import Spotter
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, colour, width: float, height: float):
@@ -22,7 +20,6 @@ class Character(pygame.sprite.Sprite):
         # Usage
         self.speed = 1
         self.health = 100
-        self.weapon = Weapon()
         self.spotting_range = 600
         self.spotted_chance = 1
         self.faction = 0
@@ -38,7 +35,6 @@ class Character(pygame.sprite.Sprite):
                 self.dstx, self.dsty = center_rect(self.rect, event.pos[0], event.pos[1])
         self.move()
         self.draw()
-        self.weapon.frame(rect_center(self.rect), (G.WIDTH//2, G.HEIGHT//2))
 
     def hit(self, x: float, y: float, dmg: float, r: float=0):
         # Check if character has been hit
@@ -59,6 +55,9 @@ class Character(pygame.sprite.Sprite):
     def draw(self):
         self.rect.x, self.rect.y = int(self.x), int(self.y)
         G.WINDOW.blit(self.image,(self.rect.x, self.rect.y))
+
+    def __bool__(self):
+        return True
 
 
 class Enemy(Character):

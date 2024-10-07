@@ -23,6 +23,7 @@ class Weapon: # Placeholder MA5B
         self.subburst_probability = 0.0
         self.subburst_delay = (0.2, 2) # Seconds: min, max
         self.spread_heat = 1 # Spread increase per shot
+        self.cooldown = [3*G.FPS, 6*G.FPS] # Time to wait after a burst
 
         self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
         self.reload_sound = pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
@@ -31,13 +32,14 @@ class Weapon: # Placeholder MA5B
         self.mag = self.mag_cap
         self.firing_timer = self.aim_time*G.FPS
         self.reload_timer = 0
-        self.firing = True
+        self.firing = False
         self.burst = min(self.mag, randint(*self.burst_range))
         self.spread = self.error
 
     def start_burst(self):
-        self.firing = True
-        self._reset_burst()
+        if not self.firing and self.mag > 0:
+            self.firing = True
+            self._reset_burst()
 
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         if self.firing:
@@ -62,9 +64,10 @@ class Weapon: # Placeholder MA5B
                 self.firing_timer -= 1
 
         else:
-            self.reload_timer = max(0, self.reload_timer-1)
-            if self.reload_timer == 0 and self.mag <= 0:
-                self._reload()
+            if self.mag <= 0:
+                self.reload_timer = max(0, self.reload_timer-1)
+                if self.reload_timer == 0:
+                    self._reload()
 
     def _target_point(self, start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[float, float]:
         dis, _, _ = displacement(start, end)

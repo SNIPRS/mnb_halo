@@ -1,6 +1,6 @@
 import pygame
 import numpy as numpy
-from random import random, uniform
+from random import random, randint
 from typing import Union, Optional
 
 import G
@@ -10,7 +10,7 @@ from utils import distance
 class Spotter:
     def __init__(self, attached: Character):
         self.spotting_updates = [3*G.FPS, 5*G.FPS] # Updates every so often
-        self.spotting_timer = uniform(self.spotting_updates[0], self.spotting_updates[1]) # Countdown
+        self.spotting_timer = randint(*self.spotting_updates) # Countdown
         self.current_target = None
         self.attached = attached
 
@@ -18,7 +18,7 @@ class Spotter:
         self.spotting_timer -= 1
         if self.spotting_timer <= 0:
             self.current_target = self._get_target()
-            self.spotting_timer = uniform(self.spotting_updates[0], self.spotting_updates[1])
+            self.spotting_timer = randint(*self.spotting_updates)
         else:
             if not self.valid_target(self.attached, self.current_target):
                 self.current_target = None
