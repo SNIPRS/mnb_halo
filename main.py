@@ -10,7 +10,7 @@ import G
 from sprite.character import Character
 
 pygame.display.set_caption('mnb_halo')
-test = Character((100, 100, 100), 30, 30)
+test = Character((100, 100, 100), 20, 20)
 
 
 def main():

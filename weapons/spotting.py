@@ -7,9 +7,10 @@ import G
 from sprite.character import Character
 from utils import distance
 
-class SpottingSystem:
+class Spotter:
     def __init__(self):
-        pass
+        self.spotting_updates = 3 * G.FPS # Updates every so often
+        self.spotting_timer = self.spotting_updates # Countdown
 
     def get_target(self, actor: Character) -> Union[None, Character]:
         # Closest
@@ -25,3 +26,6 @@ class SpottingSystem:
     def _valid_target(self, actor: Character, other: Character) -> bool:
         return (actor.faction != other.faction and random() < other.spotted_chance and
             distance((actor.x, actor.y), (other.x, other.y)) <= actor.spotting_range)
+
+    def frame(self):
+        pass
