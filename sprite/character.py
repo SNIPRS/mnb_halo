@@ -3,8 +3,8 @@ import numpy as np
 
 import G
 from utils import displacement, center_rect, rect_center
-from sprite.firing_effect import FiringEffect
 from weapons.weapon import Weapon
+from weapons.spotter import Spotter
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, colour, width: float, height: float):
@@ -26,7 +26,6 @@ class Character(pygame.sprite.Sprite):
         self.spotting_range = 600
         self.spotted_chance = 1
         self.faction = 0
-        
 
     def frame(self):
         for event in G.EVENTS:
