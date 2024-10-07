@@ -21,7 +21,7 @@ class Character(pygame.sprite.Sprite):
         # Usage
         self.speed = 1
         self.health = 100
-        self.spotting_range = 600
+        self.spotting_range = 800
         self.spotted_chance = 1
         self.faction = 0
 
@@ -58,6 +58,7 @@ class Enemy(Character):
     def __init__(self, colour, width: float, height: float):
         super().__init__(colour=colour, width=width, height=height)
         self.faction = 1
+        self.speed = 0.5
         
 
 class CharacterGroup(pygame.sprite.Group):

@@ -29,5 +29,5 @@ class FiringEffect(pygame.sprite.Sprite):
 
     def damage(self):
         for c in G.CHARS_ALL:
-            if 'hit' in c.__dict__:
-                c.hit(self.end[0], self.end[1], self.dmg)
+            c.hit(self.end[0], self.end[1], self.dmg)
+                

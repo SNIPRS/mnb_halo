@@ -26,11 +26,10 @@ class WeaponManager:
     def frame(self):
         self.current_target = self.spotter.frame()
         if self.current_target:
-            print('target')
             self.firing_pos = rect_center(self.current_target.rect)
             self.acquisition_timer -= 1
             if self.acquisition_timer <= 0 and self.cooldown_timer <= 0 and not self.weapon.firing:
-                print('firing')
+
                 self.weapon.start_burst()
                 self.cooldown_timer = randint(*self.cooldown_time)
         else:

@@ -49,8 +49,8 @@ class AssaultRifle(Weapon): # Placeholder MA5B
 
     def start_burst(self):
         if not self.firing and self.mag > 0:
-            self.firing = True
             self._reset_burst()
+            self.firing = True
 
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         if self.firing:
@@ -100,5 +100,4 @@ class AssaultRifle(Weapon): # Placeholder MA5B
 
     def _reset_burst(self):
         self.firing_timer = self.aim_time*G.FPS
-        self.firing = False
         self.burst = min(self.mag, randint(*self.burst_range))
