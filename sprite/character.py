@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-from typing import Optional
+from typing import Optional, Tuple
 
 import G
 from utils import displacement, center_rect, rect_center
@@ -29,9 +29,9 @@ class Character(pygame.sprite.Sprite):
         self.move()
         self.draw()
 
-    def hit(self, x: float, y: float, dmg: float, r: float=0):
+    def hit(self, origin: Tuple[float, float], dmg: float, r: float=0):
         # Check if character has been hit
-        mag, _, _,  = displacement((self.x, self.y), (x, y))
+        mag, _, _,  = displacement((self.x, self.y), origin)
         if mag <= self.hitbox_radius:
             self.health -= dmg
             print(self.health)

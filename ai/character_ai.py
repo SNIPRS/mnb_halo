@@ -3,7 +3,7 @@ import numpy as np
 from random import randint
 
 import G
-from weapons.weapon import Weapon, AssaultRifle
+from weapons.weapon import Weapon, AssaultRifle, PlasmaRifle
 from weapons.weapon_manager import WeaponManager
 from sprite.character import Character, Enemy
 from utils import center_rect
@@ -46,7 +46,7 @@ class EnemyCharacterAI(CharacterAI):
         self.char = Enemy((200, 100, 100), 20, 20)
         self.char.x, self.char.y = 200, 200
         G.CHARS_ALL.add(self.char)
-        self.weapon = Weapon()
+        self.weapon = PlasmaRifle()
         self.weapon_manager = WeaponManager(self.char, self.weapon)
 
     def _update_pos(self):
