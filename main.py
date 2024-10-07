@@ -7,15 +7,15 @@ import numpy as np
 
 from utils import center_rect, displacement
 import G
-from sprite.character import Character
+from ai.character_ai import CharacterAI, ControllableCharacterAI
 
 pygame.display.set_caption('mnb_halo')
-test = Character((100, 100, 100), 20, 20)
-
+player = ControllableCharacterAI()
+G.CHARS_ALL.add(player.character)
 
 def main():
     looping = True
-    while looping :
+    while looping:
         # update game state
         G.EVENTS = pygame.event.get()
         for event in G.EVENTS:
@@ -25,7 +25,7 @@ def main():
         G.WINDOW.fill(G.BACKGROUND_COL)
 
         # update character state
-        test.frame()
+        player.frame()
         for eff in G.FIRING_EFFECTS:
             eff.frame()
 

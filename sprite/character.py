@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+from typing import Optional
 
 import G
 from utils import displacement, center_rect, rect_center
@@ -25,14 +26,6 @@ class Character(pygame.sprite.Sprite):
         self.faction = 0
 
     def frame(self):
-        for event in G.EVENTS:
-            if (not self.selected and event.type == pygame.MOUSEBUTTONDOWN and
-                event.button == 1 and self.rect.collidepoint(event.pos)):
-                self.selected = True
-            elif (self.selected and event.type == pygame.MOUSEBUTTONDOWN and
-                event.button == 1):
-                self.selected = False
-                self.dstx, self.dsty = center_rect(self.rect, event.pos[0], event.pos[1])
         self.move()
         self.draw()
 
@@ -43,14 +36,15 @@ class Character(pygame.sprite.Sprite):
             self.health -= dmg
             print(self.health)
 
-    def move(self):
+    def move(self, move: Optional[bool]=True):
         # Moves a single step towards destination
         MOVE_THRESHOLD = 3
         dis, dx, dy = displacement((self.x, self.y), (self.dstx, self.dsty))
         if dis <= MOVE_THRESHOLD:
             return
-        self.x += dx * self.speed
-        self.y += dy * self.speed
+        if move:
+            self.x += dx * self.speed
+            self.y += dy * self.speed
 
     def draw(self):
         self.rect.x, self.rect.y = int(self.x), int(self.y)

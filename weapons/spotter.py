@@ -35,6 +35,8 @@ class Spotter:
                 res = other
         return res
 
-    def valid_target(self, actor: Character, other: Character) -> bool:
+    def valid_target(self, actor: Union[None, Character], other: Union[None, Character]) -> bool:
+        if actor is None or other is None:
+            return False
         return (actor.faction != other.faction and random() < other.spotted_chance and
             distance((actor.x, actor.y), (other.x, other.y)) <= actor.spotting_range)
