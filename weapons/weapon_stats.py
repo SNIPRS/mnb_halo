@@ -1,6 +1,6 @@
 import pygame
 
-from sprite.firing_effect import *
+from sprite.projectile import *
 
 
 
@@ -38,6 +38,8 @@ WEAPON_PLASMA_RIFLE = {
     'projectile': ProjectileEffect,
 
     'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
-    'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
+    'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
+
+    'firerate_decay': 1.1, # Multiplies the delay between shots
 
 }

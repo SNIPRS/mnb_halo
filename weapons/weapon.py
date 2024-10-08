@@ -137,5 +137,15 @@ class AssaultRifle(Weapon): # Placeholder MA5B
 
 class PlasmaRifle(AssaultRifle):
     def __init__(self):
-        super().__init__()
-        # Constants
+        super().__init__(WEAPON_PLASMA_RIFLE)
+        # HaloR Plasma Repeater
+        self.firerate_decay = WEAPON_PLASMA_RIFLE['firerate_decay']
+        self.firerate_orig = self.firerate
+
+    def _reset_burst(self):
+        super()._reset_burst()
+        self.firerate = self.firerate_orig
+
+    def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
+        super()._shot(start, end)
+        self.firerate = int(min(self.firerate_orig * 2, self.firerate * self.firerate_decay))
