@@ -8,7 +8,7 @@ import G
 from utils import displacement
 from weapons.weapon_stats import *
 from sprite.projectile import *
-
+from sprite.decal import DecalBulletCasing
 
 class Weapon:
     def __init__(self):
@@ -37,7 +37,7 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         self.subburst_delay = [int(0.2*G.FPS), int(0.5*G.FPS)]
         self.spread_heat = 1
         self.cooldown = [int(3*G.FPS), int(6*G.FPS)]
-        self.projectile = BulletEffect
+        self.projectile = ProjectileBullet
 
         self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
         self.reload_sound = pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
@@ -122,8 +122,11 @@ class AssaultRifle(Weapon): # Placeholder MA5B
 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
         G.PLAY_SOUND(self.fire_sound)
-        eff = self.projectile(start, end)
-        G.FIRING_EFFECTS.add(eff)
+        proj = self.projectile(start, end)
+        _, dx, dy = displacement(start, end)
+        casing = DecalBulletCasing(start, (dx, dy))
+        G.FIRING_EFFECTS.add(proj)
+        G.FIRING_EFFECTS.add(casing)
 
     def _reload(self):
         if self.mag != self.mag_cap:
@@ -147,5 +150,7 @@ class PlasmaRifle(AssaultRifle):
         self.firerate = self.firerate_orig
 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
-        super()._shot(start, end)
+        G.PLAY_SOUND(self.fire_sound)
+        proj = self.projectile(start, end)
+        G.FIRING_EFFECTS.add(proj)
         self.firerate = int(min(self.firerate_orig * 2, self.firerate * self.firerate_decay))

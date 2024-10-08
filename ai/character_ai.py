@@ -29,6 +29,8 @@ class CharacterAI:
 class ControllableCharacterAI(CharacterAI):
     def __init__(self):
         self.char = Character((100, 100, 100), 20, 20)
+        self.char.x, self.char.y = 300, 800
+        self.char.dstx, self.char.dsty = 300, 800
         G.CHARS_ALL.add(self.char)
         self.weapon = AssaultRifle()
         self.weapon_manager = WeaponManager(self.char, self.weapon)

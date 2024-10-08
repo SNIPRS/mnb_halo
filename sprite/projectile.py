@@ -6,7 +6,7 @@ from typing import Tuple, Optional
 import G
 from utils import displacement, rect_center
 
-class Effect(pygame.sprite.Sprite):
+class Projectile(pygame.sprite.Sprite):
     def __init__(self, start: Tuple[float, float], end: Optional[Tuple[float, float]] = None,
                  initial_delay: Optional[int] = 0):
         super().__init__()
@@ -27,7 +27,7 @@ class Effect(pygame.sprite.Sprite):
             c.hit(self.end, self.dmg)
 
 
-class BulletEffect(Effect):
+class ProjectileBullet(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
         super().__init__(start, end, initial_delay)
 
@@ -42,7 +42,7 @@ class BulletEffect(Effect):
         self._damage()
         self.done = True
                 
-class ProjectileEffect(Effect):
+class ProjectileBolt(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
         super().__init__(start, end, initial_delay)
         self.colour = (100, 100, 255)
@@ -69,7 +69,7 @@ class ProjectileEffect(Effect):
             self.done = True
             self.kill()
 
-class TrackingEffect(Effect):
+class ProjectileTracking(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
                  target: pygame.Rect = None):
         self.colour = (255, 100, 100)

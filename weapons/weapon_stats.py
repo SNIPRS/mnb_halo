@@ -17,7 +17,7 @@ WEAPON_ASSAULT_RIFLE = {
     'subburst_delay': [0.5, 1.5], # Seconds: min, max
     'spread_heat': 1.5, # Spread increase per shot
     'cooldown': [4, 6], # Time to wait after a burst
-    'projectile': BulletEffect, # Projectile
+    'projectile': ProjectileBullet, # Projectile
 
     'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
     'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
@@ -35,7 +35,7 @@ WEAPON_PLASMA_RIFLE = {
     'subburst_delay': [0.5, 1.0],
     'spread_heat': 2.5,
     'cooldown': [5, 8],
-    'projectile': ProjectileEffect,
+    'projectile': ProjectileBolt,
 
     'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
     'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
