@@ -6,7 +6,9 @@ from math import sin, cos, tan
 
 import G
 from utils import displacement
-from sprite.firing_effect import BulletEffect, ProjectileEffect
+from weapons.weapon_stats import *
+from sprite.firing_effect import *
+
 
 class Weapon:
     def __init__(self):
@@ -20,22 +22,50 @@ class Weapon:
         pass
 
 class AssaultRifle(Weapon): # Placeholder MA5B
-    def __init__(self):
+    def __init__(self, params: Optional[dict] = None):
+        if params is not None:
+            self.init_params(params)
+            return
         # Constants
-        self.mag_cap = 60 # Maximum magazine capacity
-        self.firerate = G.FPS // 20 # Rounds per second
-        self.error = 5 # Error angle in degrees
-        self.aim_time = 1 * G.FPS # Takes this long to aim before firing
-        self.reload_time = (int(5*G.FPS), int(7*G.FPS)) # Seconds: min, max
-        self.burst_range = (4, 16) # min, max
+        self.mag_cap = 60
+        self.firerate = G.FPS // 20
+        self.error = 5
+        self.aim_time = 1 * G.FPS
+        self.reload_time = [int(5*G.FPS), int(7*G.FPS)]
+        self.burst_range = (4, 16)
         self.subburst_probability = 0.05
-        self.subburst_delay = (int(0.2*G.FPS), int(0.5*G.FPS)) # Seconds: min, max
-        self.spread_heat = 1 # Spread increase per shot
-        self.cooldown = [int(3*G.FPS), int(6*G.FPS)] # Time to wait after a burst
-        self.shot_effect = BulletEffect
+        self.subburst_delay = [int(0.2*G.FPS), int(0.5*G.FPS)]
+        self.spread_heat = 1
+        self.cooldown = [int(3*G.FPS), int(6*G.FPS)]
+        self.projectile = BulletEffect
 
         self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
         self.reload_sound = pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
+
+        # State variables
+        self.spread = self.error
+        self.mag = self.mag_cap
+        self.firing_timer = self.aim_time
+        self.reload_timer = 0
+        self.firing = False
+        self.burst = min(self.mag, randint(*self.burst_range))
+        self.spread = self.error
+
+    def init_params(self, params: dict): # Reinit after increasing skill
+        self.mag_cap = params['mag_cap']
+        self.firerate = G.FPS // params['firerate']
+        self.error = params['error']
+        self.aim_time = params['aim_time'] * G.FPS
+        self.reload_time = [int(params['reload_time'][0]*G.FPS), int(params['reload_time'][1]*G.FPS)]
+        self.burst_range = (params['burst_range'][0], params['burst_range'][1])
+        self.subburst_probability = params['subburst_probability']
+        self.subburst_delay = [int(params['subburst_delay'][0]*G.FPS), int(params['subburst_delay'][1]*G.FPS)]
+        self.spread_heat = params['spread_heat']
+        self.cooldown = [int(params['cooldown'][0]*G.FPS), int(params['cooldown'][1]*G.FPS)]
+        self.projectile = params['projectile']
+
+        self.fire_sound = params['sound_fire']
+        self.reload_sound = params['sound_reload']
 
         # State variables
         self.spread = self.error
@@ -91,9 +121,8 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         return end[0] + r*cos(theta), end[1] + r*sin(theta)
 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
-        # Fires a single shot
         G.PLAY_SOUND(self.fire_sound)
-        eff = self.shot_effect(start, end)
+        eff = self.projectile(start, end)
         G.FIRING_EFFECTS.add(eff)
 
     def _reload(self):
@@ -110,26 +139,3 @@ class PlasmaRifle(AssaultRifle):
     def __init__(self):
         super().__init__()
         # Constants
-        self.mag_cap = 100 # Maximum magazine capacity
-        self.firerate = G.FPS // 8 # Rounds per second
-        self.error = 6 # Error angle in degrees
-        self.aim_time = 2 * G.FPS # Seconds, takes this long to aim before firing
-        self.reload_time = (int(0*G.FPS), int(1*G.FPS)) # Seconds: min, max
-        self.burst_range = (2, 8) # min, max
-        self.subburst_probability = 0.25
-        self.subburst_delay = (int(0.2*G.FPS), int(2*G.FPS)) # Seconds: min, max
-        self.spread_heat = 1 # Spread increase per shot
-        self.cooldown = [5*G.FPS, 10*G.FPS] # Time to wait after a burst
-        self.shot_effect = ProjectileEffect
-
-        self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
-        self.reload_sound = pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
-
-        # State variables
-        self.spread = self.error
-        self.mag = self.mag_cap
-        self.firing_timer = self.aim_time
-        self.reload_timer = 0
-        self.firing = False
-        self.burst = min(self.mag, randint(*self.burst_range))
-        self.spread = self.error
