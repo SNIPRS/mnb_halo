@@ -5,8 +5,10 @@ import pygame
 import random
 import numpy as np
 
-from utils import center_rect, displacement
+
 import G
+from utils import center_rect, displacement
+from misc.generate_background import generate_background
 from ai.character_ai import EnemyCharacterAI, ControllableCharacterAI
 
 pygame.display.set_caption('mnb_halo')
@@ -14,6 +16,7 @@ player = ControllableCharacterAI()
 enemy = EnemyCharacterAI()
 
 def main():
+    generate_background()
     looping = True
     while looping:
         # update game state
@@ -22,7 +25,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        G.WINDOW.fill(G.BACKGROUND_COL)
+        G.WINDOW.blit(G.BACKGROUND_IMG,(0, 0))
 
         # update character state
         player.frame()

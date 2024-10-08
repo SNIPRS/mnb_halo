@@ -7,7 +7,7 @@ from math import sin, cos, tan
 import G
 from utils import displacement
 from weapons.weapon_stats import *
-from sprite.firing_effect import *
+from sprite.projectile import *
 
 
 class Weapon:

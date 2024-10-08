@@ -9,6 +9,7 @@ DEGREE_TO_RAD = 0.01745329252
 PI = 3.14159265359
 
 BACKGROUND_COL = (0, 90, 10)
+BACKGROUND_IMG = None
 WIDTH, HEIGHT = 600, 1000
 
 CHARS_ALL = pygame.sprite.Group() # Group of Character objects
