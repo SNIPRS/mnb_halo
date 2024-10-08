@@ -13,10 +13,9 @@ BACKGROUND_IMG = None
 WIDTH, HEIGHT = 600, 1000
 
 CHARS_ALL = pygame.sprite.Group() # Group of Character objects
-FACTIONS = 2
-CHARS_FACTIONS = [pygame.sprite.Group() for i in range(FACTIONS)]
 
 FIRING_EFFECTS = pygame.sprite.Group()
+DECALS = pygame.sprite.Group()
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 CLOCK = pygame.time.Clock()

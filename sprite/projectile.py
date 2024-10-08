@@ -78,7 +78,41 @@ class ProjectileTracking(Projectile):
         self.x, self.y = start
         self.speed = 5
         self.done = False
+        self.target = target
+        d, _, _ = displacement(start, end)
+        self.max_lifetime = ceil(d/self.speed)*2
+        xp, yp = rect_center(target)
+        self.dx, self.dy = end[0] - xp, end[1] - yp
 
-        self.xp, self.yp = rect_center(target)
-        self.dx, self.dy = end[0] - self.xp, 
+    def frame(self):
+        if self.initial_delay > 0:
+            self.initial_delay -= 1
+            return
+        try:
+            xp, yp = rect_center(self.target)
+        except NameError:
+            self.done = True
+            self.kill()
+            return
+        self.max_lifetime -= 1
+        if self.max_lifetime <= 0:
+            self.done = True
+            self.kill()
+            return
+        dstx, dsty = xp + self.dx, yp + self.dy
+        dis, ux, uy = displacement((self.x, self.y), (dstx, dsty))
+        if dis <= self.speed:
+            self.x, self.y = dstx, dsty
+            pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+            self._damage()
+            self.done = True
+            self.kill()
+            return
+        self.x += ux * self.speed
+        self.y += uy * self.speed
+        pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+        
+        
+
+        
 

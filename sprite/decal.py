@@ -18,7 +18,7 @@ class Decal(pygame.sprite.Sprite):
             self.kill()
 
 class DecalBulletCasing(Decal):
-    def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 10*G.FPS,
+    def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 7*G.FPS,
                  flight_duration: int = 1*G.FPS, speed: float = 3, omega: float = 6, r: int = 2,
                  spread: float = 0.5, colour: Tuple[int, int, int] = ((150, 100, 0)),
                  thickness: int = 1): # Everything in radians

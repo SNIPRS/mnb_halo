@@ -126,7 +126,7 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         _, dx, dy = displacement(start, end)
         casing = DecalBulletCasing(start, (dx, dy))
         G.FIRING_EFFECTS.add(proj)
-        G.FIRING_EFFECTS.add(casing)
+        G.DECALS.add(casing)
 
     def _reload(self):
         if self.mag != self.mag_cap:
@@ -154,3 +154,8 @@ class PlasmaRifle(AssaultRifle):
         proj = self.projectile(start, end)
         G.FIRING_EFFECTS.add(proj)
         self.firerate = int(min(self.firerate_orig * 2, self.firerate * self.firerate_decay))
+
+class Needler(AssaultRifle):
+    def __init__(self):
+        super().__init__(WEAPON_NEEDLER)
+

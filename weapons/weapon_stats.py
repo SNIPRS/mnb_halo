@@ -41,5 +41,21 @@ WEAPON_PLASMA_RIFLE = {
     'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
 
     'firerate_decay': 1.1, # Multiplies the delay between shots
+}
 
+WEAPON_NEEDLER = {
+    'mag_cap': 20,
+    'firerate': 12,
+    'error': 4,
+    'aim_time': 1.5,
+    'reload_time': [6, 10],
+    'burst_range': [1, 6],
+    'subburst_probability': 0.20,
+    'subburst_delay': [0.6, 1.2],
+    'spread_heat': 2,
+    'cooldown': [10, 15],
+    'projectile': ProjectileTracking,
+
+    'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
+    'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
 }
