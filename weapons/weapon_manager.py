@@ -39,3 +39,7 @@ class WeaponManager:
         self.firing = self.weapon.firing
         if not self.firing:
             self.cooldown_timer -= 1
+
+    def force_stop(self):
+        self.weapon.stop_burst()
+        self.firing = self.weapon.firing

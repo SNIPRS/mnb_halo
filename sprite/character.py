@@ -20,14 +20,23 @@ class Character(pygame.sprite.Sprite):
 
         # Usage
         self.speed = 1
+
         self.health = 100
+        self.max_health = self.health
         self.morale = 100
+        self.pin_health = self.morale / 100 * 0.5
+        self.pin_health_regen = 10 / G.FPS
+        self.max_pin_health = self.pin_health
+        self.min_pin_health = -self.pin_health
+        self.pinr_multiplier = 2
+
         self.spotting_range = 800
         self.spotted_chance = 1
         self.faction = 0
         self.shoot_while_move = False
 
     def frame(self):
+        self.pin_health = min(self.max_pin_health, self.pin_health + self.pin_health_regen)
         self.draw()
 
     def hit(self, origin: Tuple[float, float], dmg: float, r: float=0):
@@ -35,7 +44,10 @@ class Character(pygame.sprite.Sprite):
         mag, _, _,  = displacement((self.x, self.y), origin)
         if mag <= self.hitbox_radius:
             self.health -= dmg
+            self.pin_health = max(min(self.pin_health - dmg, 0), self.min_pin_health)
             print(self.health)
+        elif mag <= self.hitbox_radius * self.pinr_multiplier:
+            self.pin_health = max(self.pin_health - dmg, self.min_pin_health)
 
     def move(self, move: Optional[bool]=True):
         # Moves a single step towards destination
@@ -51,6 +63,9 @@ class Character(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = int(self.x), int(self.y)
         G.WINDOW.blit(self.image,(self.rect.x, self.rect.y))
 
+    def pinned(self):
+        return self.pin_health < 0
+
     def __bool__(self):
         return True
 
@@ -60,6 +75,7 @@ class Enemy(Character):
         super().__init__(colour=colour, width=width, height=height)
         self.faction = 1
         self.speed = 0.5
+        self.spotted_chance = 1
         
 
 class CharacterGroup(pygame.sprite.Group):

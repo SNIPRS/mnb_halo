@@ -18,6 +18,9 @@ class Weapon:
     def start_burst(self):
         pass
 
+    def stop_burst(self):
+        pass
+
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         pass
 
