@@ -49,7 +49,7 @@ class ControllableCharacterAI(CharacterAI):
 
 class EnemyCharacterAI(CharacterAI):
     def __init__(self):
-        self.char = Enemy((200, 100, 100), 20, 20)
+        self.char = Enemy((200, 100, 100, 100), 20, 20)
         self.char.x, self.char.y = 200, 200
         G.CHARS_ALL.add(self.char)
         self.weapon = PlasmaRifle()

@@ -4,6 +4,7 @@ from math import ceil
 from typing import Tuple, Optional
 
 import G
+from sprite.decal import BulletImpact
 from utils import displacement, rect_center
 
 class Projectile(pygame.sprite.Sprite):
@@ -39,6 +40,9 @@ class ProjectileBullet(Projectile):
     def apply(self):
         pygame.draw.line(G.WINDOW, (255, 255, 255), self.start, self.end, 2)
         pygame.draw.line(G.WINDOW, self.colour, self.start, self.end, self.width)
+        _, dx, dy = displacement(self.start, self.end)
+        impact = BulletImpact(self.end, (dx, dy))
+        G.DECALS.add(impact)
         self._damage()
         self.done = True
                 

@@ -38,7 +38,7 @@ class DecalBulletCasing(Decal):
 
         self.theta = alpha + G.PI/2
         self.x, self.y = start
-    
+
     def _draw(self):
         c, s = np.cos(self.theta) * self.r, np.sin(self.theta) * self.r
         start = (self.x + c, self.y + s)
@@ -62,7 +62,30 @@ class DecalBulletCasing(Decal):
         else:
             self.kill()
 
-        
+class BulletImpact(Decal):
+    def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 7*G.FPS,
+                 size: int = 0, decay_time: int = 3*G.FPS):
+        super().__init__(start, duration)
+        theta = np.arctan2(direction[1], direction[0])
+        fpath = 'assets/decals/small_bullet_impact.png'
+        bullet = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (10, 10)) # save image later
+        self.rot = pygame.transform.rotate(bullet, theta)
+        r = self.rot.get_rect()
+        r.x = start[0]
+        r.y = start[1]
+        self.rect = r
+        self.decay_time = decay_time
+        self.alph_decay = 255 // decay_time
+        self.alph = 255
 
-        
-        
+    def _draw(self):
+        G.WINDOW.blit(self.rot, self.rect)
+
+    def frame(self):
+        self.duration -= 1
+        if self.duration < self.decay_time:
+            self.alph -= self.alph_decay
+            self.rot.set_alpha(self.alph)
+        self._draw()
+        if self.duration < 0:
+            self.kill()
