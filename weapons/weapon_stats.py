@@ -8,7 +8,7 @@ from sprite.projectile import *
 
 WEAPON_ASSAULT_RIFLE = {
     'mag_cap': 60, # Magazine capacity
-    'firerate': 20, # Rounds per second
+    'firerate': 10, # Rounds per second
     'error': 5, # Error angle in degrees
     'aim_time': 2, # Takes this long to aim before firing
     'reload_time': [5, 7], # Seconds: min, max
