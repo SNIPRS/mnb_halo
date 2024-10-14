@@ -63,10 +63,11 @@ class DecalBulletCasing(Decal):
             self.kill()
 
 class BulletImpact(Decal):
-    def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 7*G.FPS,
+    def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 10*G.FPS,
                  size: int = 0, decay_time: int = 3*G.FPS):
         super().__init__(start, duration)
-        theta = np.arctan2(direction[1], direction[0])
+        theta = np.arctan2(direction[1], direction[0]) * 360 / G.TAU + 90
+        print(theta)
         fpath = 'assets/decals/small_bullet_impact.png'
         bullet = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (10, 10)) # save image later
         self.rot = pygame.transform.rotate(bullet, theta)

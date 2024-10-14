@@ -45,7 +45,7 @@ class ProjectileBullet(Projectile):
         G.DECALS.add(impact)
         self._damage()
         self.done = True
-                
+
 class ProjectileBolt(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
         super().__init__(start, end, initial_delay)

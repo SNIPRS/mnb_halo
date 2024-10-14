@@ -122,7 +122,7 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         r = dis * tan(G.DEGREE_TO_RAD * self.error) * random()
         theta = random() * 2 * G.PI
         return end[0] + r*cos(theta), end[1] + r*sin(theta)
-
+ 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
         G.PLAY_SOUND(self.fire_sound)
         proj = self.projectile(start, end)

@@ -19,7 +19,7 @@ class CharacterAI:
         self._update_pos()
         self.char.frame()
         if self.char.pinned():
-            self.weapon_manager.force_stop()
+            return
         elif not self.weapon_manager.firing or self.char.shoot_while_move:
             self.char.move()
         self.weapon_manager.frame()
