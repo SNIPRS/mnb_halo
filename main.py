@@ -10,10 +10,12 @@ import G
 from utils import center_rect, displacement
 from misc.generate_background import generate_background
 from ai.character_ai import EnemyCharacterAI, ControllableCharacterAI
+from ai.game_master import EnemyManager
 
 pygame.display.set_caption('mnb_halo')
 player = ControllableCharacterAI()
-enemy = EnemyCharacterAI()
+
+enemy_manager = EnemyManager()
 
 def main():
     generate_background()
@@ -29,7 +31,7 @@ def main():
 
         # update character state
         player.frame()
-        enemy.frame()
+        enemy_manager.frame()
 
         for eff in G.FIRING_EFFECTS:
             eff.frame()

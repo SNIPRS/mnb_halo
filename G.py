@@ -14,6 +14,7 @@ BACKGROUND_IMG = None
 WIDTH, HEIGHT = 600, 1000
 
 CHARS_ALL = pygame.sprite.Group() # Group of Character objects
+CHAR_AI_ALL = pygame.sprite.Group()
 
 FIRING_EFFECTS = pygame.sprite.Group()
 DECALS = pygame.sprite.Group()

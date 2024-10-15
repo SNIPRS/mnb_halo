@@ -36,7 +36,7 @@ class Spotter:
         return res
 
     def valid_target(self, actor: Union[None, Character], other: Union[None, Character]) -> bool:
-        if actor is None or other is None:
+        if actor is None or other is None or other.health <= 0:
             return False
         return (actor.faction != other.faction and random() < other.spotted_chance and
             distance((actor.x, actor.y), (other.x, other.y)) <= actor.spotting_range)
