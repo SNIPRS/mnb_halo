@@ -74,4 +74,4 @@ class EnemyCharacterAI(CharacterAI):
         pass
 
     def can_kill(self):
-        return self.char.health < 0 or self.char.y > G.HEIGHT + 10
+        return self.char.health <= 0 or self.char.y > G.HEIGHT + 10

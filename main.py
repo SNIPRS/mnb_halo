@@ -29,14 +29,15 @@ def main():
                 sys.exit()
         G.WINDOW.blit(G.BACKGROUND_IMG,(0, 0))
 
+        for eff in G.DECALS:
+            eff.frame()
         # update character state
         player.frame()
         enemy_manager.frame()
 
         for eff in G.FIRING_EFFECTS:
             eff.frame()
-        for eff in G.DECALS:
-            eff.frame()
+
 
         pygame.display.update()
         G.CLOCK.tick(G.FPS)

@@ -22,6 +22,7 @@ class EnemyManager:
         G.CHAR_AI_ALL.add(enemy)
 
     def _cleanup(self):
+        print('cleanup')
         for c in G.CHAR_AI_ALL:
             if c.can_kill():
                 c.kill()
