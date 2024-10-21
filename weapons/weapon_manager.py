@@ -6,7 +6,7 @@ import G
 from weapons.weapon import Weapon
 from weapons.spotter import Spotter
 from sprite.character import Character
-from utils import rect_center
+from utils import rect_center, theta
 
 class WeaponManager:
     # Handles firing weapons and spotting
@@ -29,7 +29,7 @@ class WeaponManager:
             self.firing_pos = rect_center(self.current_target.rect)
             self.acquisition_timer -= 1
             if self.acquisition_timer <= 0 and self.cooldown_timer <= 0 and not self.weapon.firing:
-
+                self.attached.set_theta(theta((self.attached.x, self.attached.y), self.firing_pos))
                 self.weapon.start_burst()
                 self.cooldown_timer = randint(*self.cooldown_time)
         else:

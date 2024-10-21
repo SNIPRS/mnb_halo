@@ -3,7 +3,7 @@ import numpy as np
 from typing import Optional, Tuple
 
 import G
-from utils import displacement, center_rect, rect_center
+from utils import displacement, displacement_theta, center_rect, rect_center
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, colour, width: float, height: float):
@@ -17,6 +17,7 @@ class Character(pygame.sprite.Sprite):
         self.dstx, self.dsty = self.rect.x, self.rect.y
         self.hitbox_radius = (self.rect.width + self.rect.height)/4
         self.selected = False
+        self.theta = 0
 
         # Usage
         self.speed = 1
@@ -52,7 +53,7 @@ class Character(pygame.sprite.Sprite):
     def move(self, move: Optional[bool]=True):
         # Moves a single step towards destination
         MOVE_THRESHOLD = 3
-        dis, dx, dy = displacement((self.x, self.y), (self.dstx, self.dsty))
+        dis, dx, dy, self.theta = displacement_theta((self.x, self.y), (self.dstx, self.dsty))
         if dis <= MOVE_THRESHOLD:
             return
         if move:
@@ -68,6 +69,9 @@ class Character(pygame.sprite.Sprite):
 
     def __bool__(self):
         return True
+
+    def set_theta(self, theta: float):
+        self.theta = theta
 
 
 class Enemy(Character):

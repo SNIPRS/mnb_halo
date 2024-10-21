@@ -14,5 +14,13 @@ def displacement(start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[
     mag = np.sqrt((start[0] - end[0])**2 + (start[1] - end[1])**2)
     return mag, (end[0] - start[0])/(mag+0.000001), (end[1] - start[1])/(mag+0.000001)
 
+def displacement_theta(start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[float, float, float, float]:
+    mag = np.sqrt((start[0] - end[0])**2 + (start[1] - end[1])**2)
+    dx, dy = (end[0] - start[0])/(mag+0.000001), (end[1] - start[1])/(mag+0.000001)
+    return mag, dx, dy, np.arctan2(dy, dx)
+
 def distance(start: Tuple[float, float], end: Tuple[float, float]) -> float:
     return np.sqrt((start[0] - end[0])**2 + (start[1] - end[1])**2)
+
+def theta(start: Tuple[float, float], end: Tuple[float, float]) -> float:
+    return np.arctan2((start[1] - end[1]), (start[0] - end[0]))
