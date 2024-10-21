@@ -25,15 +25,21 @@ class Spotter:
         return self.current_target
 
     def _get_target(self) -> Union[None, Character]:
-        # Closest
+        # Closest prob 1/2 random probability 1/2
         dis = numpy.inf
         res = None
+        rand = None
+        N = 1
         for other in filter(lambda o: self.valid_target(self.attached, o), G.CHARS_ALL):
             d = distance((self.attached.x, self.attached.y), (other.x, other.y))
             if d < dis:
                 dis = d
                 res = other
-        return res
+            if random() < 1/N:
+                rand = other
+            N += 1
+
+        return res if random() <= 0.5 or rand is None else rand
 
     def valid_target(self, actor: Union[None, Character], other: Union[None, Character]) -> bool:
         if actor is None or other is None or other.health < 0:
