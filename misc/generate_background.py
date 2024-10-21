@@ -2,6 +2,14 @@ import numpy as np
 import pygame
 from PIL import Image, ImageFilter
 import G
+import os
+import random
+
+SPRITE_FOLDERS = [
+    'assets/terrain/layer0',
+    'assets/terrain/layer1',
+    'assets/terrain/layer2'
+]
 
 def generate_cloud_texture(width, height, scale=10, blur_radius=2):
     low_res_width = width // scale
@@ -22,10 +30,29 @@ def generate_green_base(width = G.WIDTH, height = G.HEIGHT, scale = 2, blur_radi
     bk = green * msk
     return bk
 
+def fill_sprites(bk: Image) -> Image:
+
+    W, H = bk.size
+    for f in SPRITE_FOLDERS:
+        sprites = load_sprites(f)
+        for sp in sprites:
+            pass
+
+
+
 def to_image(bk):
     return Image.fromarray((255 * bk).astype(np.uint8), mode='RGB')
 
+def load_sprites(folder_path: str):
+    sprites = []
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".png"):
+            sprite_path = os.path.join(folder_path, filename)
+            sprite = Image.open(sprite_path).convert("RGBA")
+            sprites.append(sprite)
+    return sprites
+
 def generate_background():
-    img = 255 * generate_green_base().swapaxes(0, 1) # Need to transpose?
+    img =generate_green_base().swapaxes(0, 1) # Need to transpose?
     img = pygame.surfarray.make_surface(img.astype(np.uint8))
     G.BACKGROUND_IMG = img
