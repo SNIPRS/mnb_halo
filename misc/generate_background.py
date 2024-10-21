@@ -11,7 +11,7 @@ SPRITE_FOLDERS = [
     'assets/terrain/layer2'
 ]
 
-def generate_cloud_texture(width, height, scale=10, blur_radius=2):
+def generate_cloud_texture(width, height, scale=100, blur_radius=50):
     low_res_width = width // scale
     low_res_height = height // scale
     noise = np.random.rand(low_res_height, low_res_width) * 255
@@ -53,6 +53,6 @@ def load_sprites(folder_path: str):
     return sprites
 
 def generate_background():
-    img =generate_green_base().swapaxes(0, 1) # Need to transpose?
+    img = generate_green_base().swapaxes(0, 1) * 255 # Need to transpose?
     img = pygame.surfarray.make_surface(img.astype(np.uint8))
     G.BACKGROUND_IMG = img
