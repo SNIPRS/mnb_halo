@@ -18,6 +18,8 @@ PLAYER_FAC = 0
 CHARS_ALL = pygame.sprite.Group() # Group of Character objects
 CHAR_AI_ALL = pygame.sprite.Group()
 
+SPRITE_SIZE = 15
+
 FIRING_EFFECTS = pygame.sprite.Group()
 DECALS = pygame.sprite.Group()
 

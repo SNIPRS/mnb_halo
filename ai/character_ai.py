@@ -11,7 +11,7 @@ from utils import center_rect, distance, rect_center
 class CharacterAI(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.char = Character((100, 100, 100), 20, 20)
+        self.char = Character((100, 100, 100), G.SPRITE_SIZE, G.SPRITE_SIZE)
         G.CHARS_ALL.add(self.char)
         self.weapon = Weapon()
         self.weapon_manager = WeaponManager(self.char, self.weapon)
@@ -39,7 +39,7 @@ class CharacterAI(pygame.sprite.Sprite):
 class ControllableCharacterAI(CharacterAI):
     def __init__(self):
         super(CharacterAI, self).__init__()
-        self.char = Character((100, 100, 100), 20, 20)
+        self.char = Character((100, 100, 100), G.SPRITE_SIZE, G.SPRITE_SIZE)
         self.char.x, self.char.y = 300, 800
         self.char.dstx, self.char.dsty = 300, 800
         G.CHARS_ALL.add(self.char)
@@ -67,7 +67,7 @@ class ControllableCharacterAI(CharacterAI):
 class EnemyCharacterAI(CharacterAI):
     def __init__(self):
         super(CharacterAI, self).__init__()
-        self.char = Enemy((200, 100, 100, 100), 20, 20)
+        self.char = Enemy((200, 100, 100, 100), G.SPRITE_SIZE, G.SPRITE_SIZE)
         self.char.x, self.char.y = randint(0, G.WIDTH - self.char.rect.width), - self.char.rect.height - 10
         self.char.dstx = self.char.x
         self.char.dsty = G.HEIGHT + 100
