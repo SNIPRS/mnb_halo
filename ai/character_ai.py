@@ -6,7 +6,7 @@ import G
 from weapons.weapon import Weapon, AssaultRifle, PlasmaRifle
 from weapons.weapon_manager import WeaponManager
 from sprite.character import Character, Enemy
-from utils import center_rect
+from utils import center_rect, distance, rect_center
 
 class CharacterAI(pygame.sprite.Sprite):
     def __init__(self):
@@ -50,6 +50,11 @@ class ControllableCharacterAI(CharacterAI):
         for event in G.EVENTS:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if not self.char.selected and self.char.rect.collidepoint(event.pos):
+                    # closest selected character
+                    d = distance(event.pos, rect_center(self.char.rect))
+                    for c in filter(lambda c: c.faction == G.PLAYER_FAC, G.CHARS_ALL):
+                        if distance(event.pos, rect_center(c.rect)) < d:
+                            return
                     self.char.selected = True
                 elif self.char.selected:
                     self.char.selected = False

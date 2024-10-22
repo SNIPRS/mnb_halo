@@ -13,6 +13,8 @@ BACKGROUND_COL = (0, 90, 10)
 BACKGROUND_IMG = None
 WIDTH, HEIGHT = 600, 1000
 
+PLAYER_FAC = 0
+
 CHARS_ALL = pygame.sprite.Group() # Group of Character objects
 CHAR_AI_ALL = pygame.sprite.Group()
 
