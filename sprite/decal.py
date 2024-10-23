@@ -4,7 +4,7 @@ from random import random
 from typing import Tuple, Optional
 
 import G
-from utils import displacement, rect_center, random_file
+from utils import displacement, rect_center, random_file, center_rect
 
 class Decal(pygame.sprite.Sprite):
     def __init__(self, start: Tuple[float, float], duration: Optional[int] = 1 * G.FPS):
@@ -95,7 +95,7 @@ class BulletImpact(Decal):
 class Explosion(Decal):
     def __init__(self, start: Tuple[float, float], duration = G.FPS * 1, size = 'small'):
         super().__init__(start, duration)
-        self.start = start
+        self.start = center_rect(start) # Need fix
         self.size = size
         self.duration = duration
         folder = 'assets/decals/explosion'

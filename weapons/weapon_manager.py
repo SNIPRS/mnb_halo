@@ -24,7 +24,7 @@ class WeaponManager:
         self.firing_pos = None
 
         self.grenade = grenade
-        self.grenade_prob = 0.05 / G.FPS # probability every second of throwing
+        self.grenade_prob = 0.2 / G.FPS # probability every second of throwing
 
     def frame(self):
         self.current_target = self.spotter.frame()
