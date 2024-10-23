@@ -3,14 +3,14 @@ import numpy as np
 from random import randint, random
 
 import G
-from weapons.weapon import Weapon
+from weapons.weapon import *
 from weapons.spotter import Spotter
 from sprite.character import Character
 from utils import rect_center, theta
 
 class WeaponManager:
     # Handles firing weapons and spotting
-    def __init__(self, attached: Character, weapon: Weapon, grenade: Weapon = None):
+    def __init__(self, attached: Character, weapon: Weapon, grenade: WeapFragGrenade = None):
         self.attached = attached
         self.spotter = Spotter(attached)
         self.weapon = weapon
@@ -24,14 +24,15 @@ class WeaponManager:
         self.firing_pos = None
 
         self.grenade = grenade
-        self.grenade_prob = 0.25 / G.FPS # probability every second of throwing
+        self.grenade_prob = 0.05 / G.FPS # probability every second of throwing
 
     def frame(self):
         self.current_target = self.spotter.frame()
         if self.current_target:
             self.firing_pos = rect_center(self.current_target.rect)
 
-            if self.grenade and random() <= self.grenade_prob:
+            if self.grenade and random() <= self.grenade_prob and distance(self.firing_pos,
+                (self.attached.x, self.attached.y)) > self.grenade.safe_d:
                 self.grenade.frame((self.attached.x, self.attached.y), self.firing_pos)
 
             self.acquisition_timer -= 1

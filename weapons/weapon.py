@@ -179,7 +179,8 @@ class WeapNeedler(WeapAssaultRifle):
 class WeapFragGrenade(Weapon):
     def __init__(self):
         super().__init__()
-        self.error = 20
+        self.error = 12
+        self.safe_d = G.UNIT * 8
 
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         # Give a start and end when you want to fire a grenade

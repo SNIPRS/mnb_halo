@@ -6,7 +6,7 @@ from random import randint
 
 import G
 from sprite.decal import BulletImpact
-from utils import displacement, rect_center, distance
+from utils import displacement, rect_center, distance, random_sample_circle
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, start: Tuple[float, float], end: Optional[Tuple[float, float]] = None,
@@ -17,6 +17,7 @@ class Projectile(pygame.sprite.Sprite):
         self.initial_delay = initial_delay
         self.dmg = 0
         self.r = 1
+        self.impact_type = None
 
     def frame(self):
         if self.initial_delay <= 0:
@@ -24,6 +25,12 @@ class Projectile(pygame.sprite.Sprite):
         self.initial_delay -= 1
         if self.initial_delay <= -2:
             self.kill()
+
+    def apply(self):
+        self._apply_impact()
+        self._damage()
+        self.done = True
+        self.kill()
 
     def _damage(self):
         for c in G.CHARS_ALL:
@@ -33,8 +40,13 @@ class Projectile(pygame.sprite.Sprite):
         for c in G.CHARS_ALL:
             d = distance((c.x, c.y), self.end)
             if d < self.r:
-                c.hit(self.end, int(self.dmg*(1-d/(self.r+1))))
+                c.hit((c.x, c.y), int(self.dmg*(1-d/(self.r+1))))
 
+    def _apply_impact(self):
+        if self.impact_type == 'bullet':
+            _, dx, dy = displacement(self.start, self.end)
+            impact = BulletImpact(self.end, (dx, dy))
+            G.DECALS.add(impact)
 
 class ProjectileBullet(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
@@ -44,13 +56,12 @@ class ProjectileBullet(Projectile):
         self.width = 1
         self.dmg = 10
         self.done = False
+        self.impact_type = 'bullet'
 
     def apply(self):
         pygame.draw.line(G.WINDOW, (255, 255, 255), self.start, self.end, 2)
         pygame.draw.line(G.WINDOW, self.colour, self.start, self.end, self.width)
-        _, dx, dy = displacement(self.start, self.end)
-        impact = BulletImpact(self.end, (dx, dy))
-        G.DECALS.add(impact)
+        self._apply_impact()
         self._damage()
         self.done = True
 
@@ -60,6 +71,7 @@ class ProjectileShotgunShell(ProjectileBullet):
         self.colour = (255, 234, 0)
         self.width = 1
         self.dmg = 20
+        self.impact_type = 'bullet'
 
 class ProjectileBolt(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
@@ -84,9 +96,27 @@ class ProjectileBolt(Projectile):
             self.y += self.dy * self.speed
         else:
             pygame.draw.circle(G.WINDOW, self.colour, self.end, self.drawr)
+            self._apply_impact()
             self._damage()
             self.done = True
             self.kill()
+
+class ProjectileSpark(ProjectileBolt):
+    def __init__(self, start, end = None, initial_delay = 0):
+        super().__init__(start, end, initial_delay)
+        self.dmg = 0
+        self.colour = (200, 200, 100)
+        self.drawr = 1
+        self.speed = randint(5, 20)
+        dis, self.dx, self.dy = displacement(start, end)
+        self.apply_frames = ceil(dis/self.speed)
+
+class ProjectileShrapnel(ProjectileSpark):
+    def __init__(self, start, end = None, initial_delay = 0):
+        super().__init__(start, end, initial_delay)
+        self.dmg = randint(5, 25)
+        self.colour = (100, 100, 100)
+        self.impact_type = 'bullet'
 
 class ProjectileFragGrenade(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
@@ -94,18 +124,19 @@ class ProjectileFragGrenade(Projectile):
         print('grenade')
         self.theta = randint(-180, 180) # Degrees
         self.omega = randint(int(-360 * 4 / G.FPS), int(360 * 4 / G.FPS))
-        self.dmg = 300 + randint(-100, 100)
+        self.dmg = 100 + randint(-25, 100)
         self.x, self.y = start
         self.end = end
-        self.r = 2 * G.UNIT
-        self.n_frag = randint(3, 8)
-        self.n_spark = randint(6, 10)
+        self.r = 5 * G.UNIT
+        self.fragr = 2 * self.r
+        self.n_frag = randint(3, 6)
+        self.n_spark = randint(2, 4)
 
         fpath = 'assets/weapons/grenade.png'
         self.max_img = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (20, 20))
         self.img = self.max_img.copy()
 
-        self.speed = 3
+        self.speed = 6
         dis, self.dx, self.dy = displacement(start, end)
         self.apply_frames = ceil(dis/self.speed)
 
@@ -123,8 +154,20 @@ class ProjectileFragGrenade(Projectile):
         else:
             G.WINDOW.blit(self.img, self.end)
             self._r_damage()
+            self._apply_impact()
+            self._create_fragments()
             self.done = True
             self.kill()
+
+    def _create_fragments(self):
+        for _ in range(self.n_frag):
+            dst = random_sample_circle(self.end, self.fragr)
+            proj = ProjectileShrapnel(self.end, dst)
+            G.FIRING_EFFECTS.add(proj)
+        for _ in range(self.n_spark):
+            dst = random_sample_circle(self.end, self.fragr)
+            proj = ProjectileSpark(self.end, dst)
+            G.FIRING_EFFECTS.add(proj)
 
 
 class ProjectileTracking(Projectile):
@@ -166,6 +209,7 @@ class ProjectileTracking(Projectile):
             self.x, self.y = self.end
             pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
             self._damage()
+            self._apply_impact()
             self.done = True
             self.kill()
             return

@@ -1,6 +1,6 @@
 import pygame
 import sys
-import random
+from random import uniform
 import numpy as np
 from typing import Tuple
 
@@ -24,3 +24,11 @@ def distance(start: Tuple[float, float], end: Tuple[float, float]) -> float:
 
 def theta(start: Tuple[float, float], end: Tuple[float, float]) -> float:
     return np.arctan2((start[1] - end[1]), (start[0] - end[0]))
+
+def random_sample_circle(pos: Tuple[float, float], r: float) -> Tuple[float, float]:
+    theta = uniform(0, 2 * np.pi)
+    # Not a uniform sampler !
+    d = r * uniform(0, 1)
+    x = d * np.cos(theta) + pos[0]
+    y = d * np.sin(theta) + pos[1]
+    return (x, y)
