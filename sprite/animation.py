@@ -20,6 +20,7 @@ class CharacterAnimation:
             'PIN': 3,
             'DEAD': 4,
             'MELEE': 5,
+            'POINT': 6,
         }
         self.missing_txtr = pygame.Surface([G.SPRITE_SIZE, G.SPRITE_SIZE])
         self.missing_txtr.fill('purple')

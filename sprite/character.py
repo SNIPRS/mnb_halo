@@ -24,12 +24,17 @@ class Character(pygame.sprite.Sprite):
 
         self.health = 100
         self.max_health = self.health
+
         self.morale = 100
         self.pin_health = self.morale / 100 * 0.5
         self.pin_health_regen = 10 / G.FPS
         self.max_pin_health = self.pin_health
         self.min_pin_health = -self.pin_health
         self.pinr_multiplier = 2
+
+        self.supercombine_health = self.health // 2
+        self.max_supercombine_health = self.supercombine_health
+        self.supercombine_regen = 25 / G.FPS
 
         self.spotting_range = 800
         self.spotted_chance = 1
@@ -38,6 +43,8 @@ class Character(pygame.sprite.Sprite):
 
     def frame(self):
         self.pin_health = min(self.max_pin_health, self.pin_health + self.pin_health_regen)
+        self.supercombine_health = min(self.max_supercombine_health, self.supercombine_health +
+                                       self.supercombine_regen)
         self.draw()
 
     def hit(self, origin: Tuple[float, float], dmg: float, r: float=0):
@@ -78,7 +85,7 @@ class Enemy(Character):
     def __init__(self, colour, width: float, height: float):
         super().__init__(colour=colour, width=width, height=height)
         self.faction = 1
-        self.speed = 0.5
+        self.speed = 0.3
         self.spotted_chance = 1
         
 

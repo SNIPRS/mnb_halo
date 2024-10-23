@@ -14,6 +14,7 @@ class Weapon:
     def __init__(self):
         self.firing = False
         self.cooldown = [1, 1]
+        self.target_rect = None
 
     def start_burst(self):
         pass
@@ -79,13 +80,15 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         self.burst = min(self.mag, randint(*self.burst_range))
         self.spread = self.error
 
-    def start_burst(self):
+    def start_burst(self, target: pygame.Rect = None): # target for tracking weapons
         if not self.firing and self.mag > 0:
             self._reset_burst()
             self.firing = True
+            self.target_rect = target
 
     def stop_burst(self):
         self.firing = False
+        self.target_rect = None
         self._reset_burst()
 
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
@@ -138,6 +141,7 @@ class AssaultRifle(Weapon): # Placeholder MA5B
 
     def _reset_burst(self):
         self.firing_timer = self.aim_time
+        self.target_rect = None
         self.burst = min(self.mag, randint(*self.burst_range))
 
 
@@ -161,4 +165,10 @@ class PlasmaRifle(AssaultRifle):
 class Needler(AssaultRifle):
     def __init__(self):
         super().__init__(WEAPON_NEEDLER)
+
+    def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
+        G.PLAY_SOUND(self.fire_sound)
+        proj = ProjectileTracking(start, end, target=self.target_rect)
+        G.FIRING_EFFECTS.add(proj)
+
 

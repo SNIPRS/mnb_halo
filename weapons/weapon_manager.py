@@ -30,7 +30,7 @@ class WeaponManager:
             self.acquisition_timer -= 1
             if self.acquisition_timer <= 0 and self.cooldown_timer <= 0 and not self.weapon.firing:
                 self.attached.set_theta(theta((self.attached.x, self.attached.y), self.firing_pos))
-                self.weapon.start_burst()
+                self.weapon.start_burst(self.current_target.rect)
                 self.cooldown_timer = randint(*self.cooldown_time)
         else:
             self.acquisition_timer = randint(*self.acquisition_time)

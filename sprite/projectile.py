@@ -50,7 +50,7 @@ class ProjectileBolt(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
         super().__init__(start, end, initial_delay)
         self.colour = (100, 100, 255)
-        self.dmg = 30
+        self.dmg = 20
         self.drawr = 3
         self.x, self.y = start
         self.speed = 5
@@ -76,6 +76,7 @@ class ProjectileBolt(Projectile):
 class ProjectileTracking(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
                  target: pygame.Rect = None):
+        super().__init__(start, end, initial_delay)
         self.colour = (255, 100, 100)
         self.dmg = 30
         self.drawr = 3
@@ -115,8 +116,13 @@ class ProjectileTracking(Projectile):
         self.x += ux * self.speed
         self.y += uy * self.speed
         pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
-        
-        
 
-        
+
+class ProjectileNeedler(ProjectileTracking):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
+                 target: pygame.Rect = None):
+        super().__init__(start, end, initial_delay, target)
+        self.dmg = 15
+        self.supercombine_dmg = 15
+
 

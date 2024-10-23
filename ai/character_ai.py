@@ -3,7 +3,7 @@ import numpy as np
 from random import randint
 
 import G
-from weapons.weapon import Weapon, AssaultRifle, PlasmaRifle
+from weapons.weapon import *
 from weapons.weapon_manager import WeaponManager
 from sprite.character import Character, Enemy
 from utils import center_rect, distance, rect_center
@@ -72,7 +72,7 @@ class EnemyCharacterAI(CharacterAI):
         self.char.dstx = self.char.x
         self.char.dsty = G.HEIGHT + 100
         G.CHARS_ALL.add(self.char)
-        self.weapon = PlasmaRifle()
+        self.weapon = Needler()
         self.weapon_manager = WeaponManager(self.char, self.weapon)
 
     def _update_desination(self):
