@@ -14,6 +14,7 @@ class CharacterAI(pygame.sprite.Sprite):
         self.char = Character((100, 100, 100), G.SPRITE_SIZE, G.SPRITE_SIZE)
         G.CHARS_ALL.add(self.char)
         self.weapon = Weapon()
+        self.grenade = None
         self.weapon_manager = WeaponManager(self.char, self.weapon)
 
     def frame(self):
@@ -43,8 +44,9 @@ class ControllableCharacterAI(CharacterAI):
         self.char.x, self.char.y = 300, 800
         self.char.dstx, self.char.dsty = 300, 800
         G.CHARS_ALL.add(self.char)
-        self.weapon = AssaultRifle()
-        self.weapon_manager = WeaponManager(self.char, self.weapon)
+        self.weapon = WeapAssaultRifle()
+        self.grenade = WeapFragGrenade()
+        self.weapon_manager = WeaponManager(self.char, self.weapon, self.grenade)
 
     def _update_desination(self):
         for event in G.EVENTS:
@@ -72,7 +74,7 @@ class EnemyCharacterAI(CharacterAI):
         self.char.dstx = self.char.x
         self.char.dsty = G.HEIGHT + 100
         G.CHARS_ALL.add(self.char)
-        self.weapon = Needler()
+        self.weapon = WeapNeedler()
         self.weapon_manager = WeaponManager(self.char, self.weapon)
 
     def _update_desination(self):

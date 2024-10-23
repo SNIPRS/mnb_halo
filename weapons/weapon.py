@@ -15,6 +15,7 @@ class Weapon:
         self.firing = False
         self.cooldown = [1, 1]
         self.target_rect = None
+        self.error = 0
 
     def start_burst(self):
         pass
@@ -25,7 +26,17 @@ class Weapon:
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         pass
 
-class AssaultRifle(Weapon): # Placeholder MA5B
+    def _target_point(self, start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[float, float]:
+        dis, _, _ = displacement(start, end)
+        # Not a uniform sampler!
+        r = dis * tan(G.DEGREE_TO_RAD * self.error) * random()
+        theta = random() * 2 * G.PI
+        return end[0] + r*cos(theta), end[1] + r*sin(theta)
+
+    def __bool__(self) -> bool:
+        return True
+
+class WeapAssaultRifle(Weapon): # Placeholder MA5B
     def __init__(self, params: Optional[dict] = None):
         if params is not None:
             self.init_params(params)
@@ -118,13 +129,6 @@ class AssaultRifle(Weapon): # Placeholder MA5B
                 self.reload_timer = max(0, self.reload_timer-1)
                 if self.reload_timer == 0:
                     self._reload()
-
-    def _target_point(self, start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[float, float]:
-        dis, _, _ = displacement(start, end)
-        # Not a uniform sampler!
-        r = dis * tan(G.DEGREE_TO_RAD * self.error) * random()
-        theta = random() * 2 * G.PI
-        return end[0] + r*cos(theta), end[1] + r*sin(theta)
  
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
         G.PLAY_SOUND(self.fire_sound)
@@ -145,7 +149,7 @@ class AssaultRifle(Weapon): # Placeholder MA5B
         self.burst = min(self.mag, randint(*self.burst_range))
 
 
-class PlasmaRifle(AssaultRifle):
+class WeapPlasmaRifle(WeapAssaultRifle):
     def __init__(self):
         super().__init__(WEAPON_PLASMA_RIFLE)
         # HaloR Plasma Repeater
@@ -162,13 +166,24 @@ class PlasmaRifle(AssaultRifle):
         G.FIRING_EFFECTS.add(proj)
         self.firerate = int(min(self.firerate_orig * 2, self.firerate * self.firerate_decay))
 
-class Needler(AssaultRifle):
+class WeapNeedler(WeapAssaultRifle):
     def __init__(self):
         super().__init__(WEAPON_NEEDLER)
 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
         G.PLAY_SOUND(self.fire_sound)
-        proj = ProjectileTracking(start, end, target=self.target_rect)
+        proj = ProjectileNeedler(start, end, target=self.target_rect)
         G.FIRING_EFFECTS.add(proj)
 
 
+class WeapFragGrenade(Weapon):
+    def __init__(self):
+        super().__init__()
+        self.error = 20
+
+    def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
+        # Give a start and end when you want to fire a grenade
+        if start is not None and end is not None:
+            target = self._target_point(start, end)
+            proj = ProjectileFragGrenade(start, target, initial_delay = randint(0, G.FPS))
+            G.FIRING_EFFECTS.add(proj)

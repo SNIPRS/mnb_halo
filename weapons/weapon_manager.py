@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-from random import randint
+from random import randint, random
 
 import G
 from weapons.weapon import Weapon
@@ -10,7 +10,7 @@ from utils import rect_center, theta
 
 class WeaponManager:
     # Handles firing weapons and spotting
-    def __init__(self, attached: Character, weapon: Weapon):
+    def __init__(self, attached: Character, weapon: Weapon, grenade: Weapon = None):
         self.attached = attached
         self.spotter = Spotter(attached)
         self.weapon = weapon
@@ -23,10 +23,17 @@ class WeaponManager:
         self.cooldown_timer = 0
         self.firing_pos = None
 
+        self.grenade = grenade
+        self.grenade_prob = 0.25 / G.FPS # probability every second of throwing
+
     def frame(self):
         self.current_target = self.spotter.frame()
         if self.current_target:
             self.firing_pos = rect_center(self.current_target.rect)
+
+            if self.grenade and random() <= self.grenade_prob:
+                self.grenade.frame((self.attached.x, self.attached.y), self.firing_pos)
+
             self.acquisition_timer -= 1
             if self.acquisition_timer <= 0 and self.cooldown_timer <= 0 and not self.weapon.firing:
                 self.attached.set_theta(theta((self.attached.x, self.attached.y), self.firing_pos))

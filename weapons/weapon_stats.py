@@ -5,6 +5,7 @@ from sprite.projectile import *
 
 
 # Base weapon stats ======================================================
+# for quickly changing values
 
 WEAPON_ASSAULT_RIFLE = {
     'mag_cap': 60, # Magazine capacity
@@ -22,6 +23,23 @@ WEAPON_ASSAULT_RIFLE = {
     'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
     'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
 
+}
+
+WEAPON_SHOTGUN = {
+    'mag_cap': 100,
+    'firerate': 8,
+    'error': 4,
+    'aim_time': 2,
+    'reload_time': [0, 0],
+    'burst_range': [1, 4],
+    'subburst_probability': 0.25,
+    'subburst_delay': [0.5, 1.0],
+    'spread_heat': 2.5,
+    'cooldown': [5, 8],
+    'projectile': ProjectileBolt,
+
+    'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
+    'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
 }
 
 WEAPON_PLASMA_RIFLE = {
@@ -59,3 +77,4 @@ WEAPON_NEEDLER = {
     'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
     'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
 }
+
