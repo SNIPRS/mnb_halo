@@ -5,7 +5,7 @@ from typing import Tuple, Optional
 from random import randint
 
 import G
-from sprite.decal import BulletImpact
+from sprite.decal import BulletImpact, Explosion
 from utils import displacement, rect_center, distance, random_sample_circle
 
 class Projectile(pygame.sprite.Sprite):
@@ -43,9 +43,14 @@ class Projectile(pygame.sprite.Sprite):
                 c.hit((c.x, c.y), int(self.dmg*(1-d/(self.r+1))))
 
     def _apply_impact(self):
+        if self.impact_type is None:
+            return
         if self.impact_type == 'bullet':
             _, dx, dy = displacement(self.start, self.end)
             impact = BulletImpact(self.end, (dx, dy))
+            G.DECALS.add(impact)
+        elif self.impact_type == 'explosion':
+            impact = Explosion(self.end)
             G.DECALS.add(impact)
 
 class ProjectileBullet(Projectile):
@@ -126,6 +131,7 @@ class ProjectileFragGrenade(Projectile):
         self.omega = randint(int(-360 * 4 / G.FPS), int(360 * 4 / G.FPS))
         self.dmg = 100 + randint(-25, 100)
         self.x, self.y = start
+        self.impact_type = 'explosion'
         self.end = end
         self.r = 5 * G.UNIT
         self.fragr = 2 * self.r

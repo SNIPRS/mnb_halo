@@ -1,6 +1,6 @@
 import pygame
-import sys
-from random import uniform
+import os
+from random import uniform, choice
 import numpy as np
 from typing import Tuple
 
@@ -32,3 +32,8 @@ def random_sample_circle(pos: Tuple[float, float], r: float) -> Tuple[float, flo
     x = d * np.cos(theta) + pos[0]
     y = d * np.sin(theta) + pos[1]
     return (x, y)
+
+def random_file(folder: str) -> str:
+    files = os.listdir(folder)
+    files = [f for f in files if os.path.isfile(os.path.join(folder, f))]
+    return os.path.join(folder, choice(files))
