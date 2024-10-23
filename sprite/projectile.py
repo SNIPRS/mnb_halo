@@ -144,7 +144,7 @@ class ProjectileFragGrenade(Projectile):
 
         self.speed = 6
         dis, self.dx, self.dy = displacement(start, end)
-        self.apply_frames = ceil(dis/self.speed)
+        self.apply_frames = dis//self.speed
 
     def frame(self):
         if self.initial_delay > 0:
