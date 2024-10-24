@@ -120,7 +120,7 @@ class ProjectileShrapnel(ProjectileSpark):
     def __init__(self, start, end = None, initial_delay = 0):
         super().__init__(start, end, initial_delay)
         self.dmg = randint(5, 25)
-        self.colour = (100, 100, 100)
+        self.colour = (200, 200, 100)
         self.impact_type = 'bullet'
 
 class ProjectileFragGrenade(Projectile):
@@ -135,8 +135,8 @@ class ProjectileFragGrenade(Projectile):
         self.end = end
         self.r = 5 * G.UNIT
         self.fragr = 2 * self.r
-        self.n_frag = randint(3, 6)
-        self.n_spark = randint(2, 4)
+        self.n_frag = randint(3, 5)
+        self.n_spark = randint(3, 5)
 
         fpath = 'assets/weapons/grenade.png'
         self.max_img = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (20, 20))
