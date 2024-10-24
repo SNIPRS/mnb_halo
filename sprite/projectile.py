@@ -5,7 +5,7 @@ from typing import Tuple, Optional
 from random import randint
 
 import G
-from sprite.decal import BulletImpact, Explosion
+from sprite.decal import *
 from utils import displacement, rect_center, distance, random_sample_circle
 
 class Projectile(pygame.sprite.Sprite):
@@ -228,7 +228,49 @@ class ProjectileNeedler(ProjectileTracking):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
                  target: pygame.Rect = None):
         super().__init__(start, end, initial_delay, target)
+        self.drawr = 1.5
+        self.colour = (255, 50, 100)
+        self.tail_len = 3
+        self.tail_colour = (255, 150, 200)
         self.dmg = 15
         self.supercombine_dmg = 15
+
+    def frame(self):
+        if self.initial_delay > 0:
+            self.initial_delay -= 1
+            return
+        try:
+            xp, yp = rect_center(self.target) if self.target is not None else self.end
+        except NameError:
+            self.done = True
+            self.kill()
+            return
+        self.max_lifetime -= 1
+        if self.max_lifetime <= 0:
+            self.done = True
+            self.kill()
+            return
+        dstx, dsty = xp + self.dx, yp + self.dy
+        self.end = dstx, dsty
+        dis, ux, uy = displacement((self.x, self.y), self.end)
+        if dis <= self.speed:
+            self.x, self.y = self.end
+            pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+            self._damage()
+            # Apply impact
+            circle_params = (self.colour, (self.x, self.y), self.drawr)
+            line_params = (self.tail_colour, (self.x, self.y),
+                         (self.x - ux*self.tail_len, self.y - uy*self.tail_len))
+            impact = NeedlerImpact(self.end, circle_params=circle_params, line_params=line_params)
+            G.DECALS.add(impact)
+            self.done = True
+            self.kill()
+            return
+        self.x += ux * self.speed
+        self.y += uy * self.speed
+        pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+        pygame.draw.line(G.WINDOW, self.tail_colour, (self.x, self.y),
+                         (self.x - ux*self.tail_len, self.y - uy*self.tail_len))
+
 
 

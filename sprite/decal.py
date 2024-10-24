@@ -95,11 +95,12 @@ class BulletImpact(Decal):
 class Explosion(Decal):
     def __init__(self, start: Tuple[float, float], duration = G.FPS * 1, size = 'small'):
         super().__init__(start, duration)
-        self.start = center_rect(start) # Need fix
+        
         self.size = size
         self.duration = duration
         folder = 'assets/decals/explosion'
         self.img = pygame.image.load(random_file(folder)).convert_alpha()
+        self.start = center_rect(self.img.get_rect(), *start)
         self.alph_decay = 255 // self.duration
         self.alph = 255
 
@@ -112,4 +113,22 @@ class Explosion(Decal):
         else:
             self.kill()
 
-    
+class NeedlerImpact(Decal):
+    def __init__(self, start: Tuple[float, float], duration = G.FPS * 1, circle_params: Tuple = None,
+                 line_params: Tuple = None):
+        super().__init__(start, duration)
+        self.circle_params = circle_params
+        self.line_params = line_params
+        folder = 'assets/decals/explosion/needler'
+        self.img = pygame.image.load(random_file(folder)).convert_alpha()
+        self.start = center_rect(self.img.get_rect(), *start)
+
+    def frame(self):
+        if self.duration > 0:
+            pygame.draw.circle(G.WINDOW, *self.circle_params)
+            pygame.draw.line(G.WINDOW, *self.line_params)
+            self.duration -= 1
+        else:
+            G.WINDOW.blit(self.img, self.start)
+            self.kill()
+        
