@@ -45,3 +45,7 @@ def QUEUE_SOUNDS(sounds: List[pygame.mixer.Sound]):
             for s in sounds:
                 pygame.mixer.Channel(i).queue(s)
             return
+
+RANDOM_OBJ = {
+    'needler_expl': pygame.mixer.Sound("./assets/sounds/needler_expl_3.wav")
+}
