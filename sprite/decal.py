@@ -22,12 +22,13 @@ class DecalBulletCasing(Decal):
     def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 7*G.FPS,
                  flight_duration: int = 1*G.FPS, speed: float = 3, omega: float = 6, r: int = 1.5,
                  spread: float = 0.5, colour: Tuple[int, int, int] = ((175, 125, 0)),
-                 thickness: int = 1): # Everything in radians
+                 thickness: int = 1, initial_delay: int = 0): # Everything in radians
         super().__init__(start, duration)
         self.start = start
         alpha = np.arctan2(direction[1], direction[0]) + G.PI/2 + (random() - 0.5)*spread
         self.direction = (np.cos(alpha), np.sin(alpha))
         self.duration = duration
+        self.initial_delay = initial_delay
         self.flight_duration = max(30, int(flight_duration * random()))
         self.speed = max(1, speed * random())
         self.r = r
@@ -52,6 +53,9 @@ class DecalBulletCasing(Decal):
         pygame.draw.line(G.WINDOW, colour, start, end, self.thickness)
 
     def frame(self):
+        if self.initial_delay > 0:
+            self.initial_delay -= 1
+            return
         self.duration -= 1
         self.flight_duration -= 1
         if self.flight_duration > 0:

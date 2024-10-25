@@ -25,6 +25,27 @@ WEAPON_ASSAULT_RIFLE = {
 
 }
 
+WEAPON_BATTLE_RIFLE = {
+    'mag_cap': 12, # Magazine capacity # 3 round bursts
+    'firerate': 1.5, # Rounds per second
+    'error': 0.5, # Error angle in degrees
+    'aim_time': 1.5, # Takes this long to aim before firing
+    'reload_time': [5, 7], # Seconds: min, max
+    'burst_range': [2, 4], # min, max
+    'subburst_probability': 0.3, # Probability of each shot of stopping
+    'subburst_delay': [0.5, 1.5], # Seconds: min, max
+    'spread_heat': 0, # Spread increase per shot
+    'cooldown': [4, 6], # Time to wait after a burst
+    'projectile': ProjectileBullet, # Projectile
+
+    'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"), # need a sound for 3 round burst
+    'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
+
+    'burst_size': 3,
+    'burst_rof': 20, # rounds per second
+    'burst_heat': 0.5 # spread increase per shot
+}
+
 WEAPON_SHOTGUN = {
     'mag_cap': 8,
     'firerate': 1,

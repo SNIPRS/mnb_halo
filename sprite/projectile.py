@@ -68,8 +68,12 @@ class ProjectileBullet(Projectile):
         self.dmg = 20
         self.done = False
         self.impact_type = 'bullet'
+        self.initial_delay  = initial_delay
 
     def apply(self):
+        if self.initial_delay > 0:
+            self.initial_delay -= 1
+            return
         pygame.draw.line(G.WINDOW, (255, 255, 255), self.start, self.end, 2)
         pygame.draw.line(G.WINDOW, self.colour, self.start, self.end, self.width)
         self._apply_impact()

@@ -148,6 +148,26 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
         self.target_rect = None
         self.burst = min(self.mag, randint(*self.burst_range))
 
+class WeapBattleRifle(WeapAssaultRifle):
+    def __init__(self, params: Optional[dict] = WEAPON_BATTLE_RIFLE):
+        super().__init__(params)
+        self.burst_size = params['burst_size']
+        self.burst_rof = G.FPS // params['burst_rof']
+        self.burst_heat = params['burst_heat']
+
+    def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
+        G.PLAY_SOUND(self.sound_fire) # 3 rounds
+        for i in range(self.burst_size):
+            end = self._target_point(start, end)
+            proj = self.projectile(start, end, initial_delay=i*self.burst_rof)
+            _, dx, dy = displacement(start, end)
+            casing = DecalBulletCasing(start, (dx, dy), initial_delay=i*self.burst_rof)
+            G.FIRING_EFFECTS.add(proj)
+            G.DECALS.add(casing)
+            self.spread += self.burst_heat
+        self.spread = self.error
+
+
 class WeapShotgun(WeapAssaultRifle):
     def __init__(self, params: Optional[dict] = WEAPON_SHOTGUN):
         super().__init__(params)
