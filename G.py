@@ -1,5 +1,6 @@
 import pygame
 import numpy
+from typing import List
 
 # Globals
 
@@ -36,4 +37,11 @@ def PLAY_SOUND(sound: pygame.mixer.Sound):
     for i in range(MIXER_CHANNELS):
         if not pygame.mixer.Channel(i).get_busy():
             pygame.mixer.Channel(i).play(sound)
+            return
+
+def QUEUE_SOUND(sounds: List[pygame.mixer.Sound]):
+    for i in range(MIXER_CHANNELS):
+        if not pygame.mixer.Channel(i).get_busy():
+            for s in sounds:
+                pygame.mixer.Channel(i).queue(s)
             return

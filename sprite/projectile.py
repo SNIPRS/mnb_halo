@@ -140,7 +140,7 @@ class ProjectileFragGrenade(Projectile):
         self.impact_type = 'explosion'
         self.end = end
         self.r = 5 * G.UNIT
-        self.fragr = 2 * self.r
+        self.fragr = 1.3 * self.r
         self.n_frag = randint(5, 8)
         self.n_spark = randint(5, 10)
 
