@@ -44,7 +44,7 @@ class ControllableCharacterAI(CharacterAI):
         self.char.x, self.char.y = 300, 800
         self.char.dstx, self.char.dsty = 300, 800
         G.CHARS_ALL.add(self.char)
-        self.weapon = WeapBattleRifle() # WeapAssaultRifle()
+        self.weapon = WeapShotgun() # WeapAssaultRifle()
         self.grenade = WeapFragGrenade()
         self.weapon_manager = WeaponManager(self.char, self.weapon, self.grenade)
 

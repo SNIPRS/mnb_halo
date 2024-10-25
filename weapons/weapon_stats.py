@@ -28,7 +28,7 @@ WEAPON_ASSAULT_RIFLE = {
 WEAPON_BATTLE_RIFLE = {
     'mag_cap': 12, # Magazine capacity # 3 round bursts
     'firerate': 1.5, # Rounds per second
-    'error': 0.5, # Error angle in degrees
+    'error': 1, # Error angle in degrees
     'aim_time': 1.5, # Takes this long to aim before firing
     'reload_time': [5, 7], # Seconds: min, max
     'burst_range': [2, 4], # min, max
@@ -38,12 +38,12 @@ WEAPON_BATTLE_RIFLE = {
     'cooldown': [4, 6], # Time to wait after a burst
     'projectile': ProjectileBullet, # Projectile
 
-    'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"), # need a sound for 3 round burst
-    'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
+    'sound_fire': pygame.mixer.Sound("./assets/sounds/br_fire.wav"), # need a sound for 3 round burst
+    'sound_reload': pygame.mixer.Sound("./assets/sounds/br_reload.wav"),
 
     'burst_size': 3,
     'burst_rof': 20, # rounds per second
-    'burst_heat': 0.5 # spread increase per shot
+    'burst_heat': 1 # spread increase per shot
 }
 
 WEAPON_SHOTGUN = {
@@ -61,6 +61,7 @@ WEAPON_SHOTGUN = {
 
     'sound_fire': pygame.mixer.Sound("./assets/sounds/shotgun_fire.wav"),
     'sound_reload': pygame.mixer.Sound("./assets/sounds/shotgun_reload.wav"),
+    'sound_full_reload': pygame.mixer.Sound("./assets/sounds/shotgun_full_reload.wav"),
 
     'pellets': 8,
     'sound_pump': pygame.mixer.Sound("assets/sounds/shotgun_ready.wav"),

@@ -175,6 +175,7 @@ class WeapShotgun(WeapAssaultRifle):
         self.sound_pump = params['sound_pump']
         self.sound_open = params['sound_open']
         self.sound_close = params['sound_close']
+        self.sound_reload = params['sound_full_reload']
         self.pellets = params['pellets']
 
     def _shot(self, start, end):
@@ -191,8 +192,8 @@ class WeapShotgun(WeapAssaultRifle):
 
     def _reload(self):
         if self.mag != self.mag_cap:
-            G.QUEUE_SOUNDS([self.sound_open, self.sound_reload, self.sound_close] +
-                           (self.mag_cap-self.mag-1)*[self.sound_reload])
+            print('reload')
+            G.PLAY_SOUND(self.sound_reload)
         self.mag = self.mag_cap
 
 class WeapPlasmaRifle(WeapAssaultRifle):
