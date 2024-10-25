@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 from math import ceil
 from typing import Tuple, Optional
-from random import randint
+from random import randint, choice
 
 import G
 from sprite.decal import *
@@ -128,8 +128,8 @@ class ProjectileFragGrenade(Projectile):
         super().__init__(start, end, initial_delay)
         print('grenade')
         self.theta = randint(-180, 180) # Degrees
-        self.omega = randint(int(-360 * 4 / G.FPS), int(360 * 4 / G.FPS))
-        self.dmg = 100 + randint(-25, 100)
+        self.omega = randint(2, 6) * choice([-1, 1]) * 360/G.FPS
+        self.dmg = 200 + randint(-25, 100)
         self.x, self.y = start
         self.impact_type = 'explosion'
         self.end = end
@@ -139,12 +139,18 @@ class ProjectileFragGrenade(Projectile):
         self.n_spark = randint(3, 5)
 
         fpath = 'assets/weapons/grenade.png'
-        self.max_img = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (20, 20))
+        self.max_size = 20
+        self.max_img = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(),
+                                                    (self.max_size , self.max_size))
         self.img = self.max_img.copy()
 
         self.speed = 6
         dis, self.dx, self.dy = displacement(start, end)
         self.apply_frames = dis//self.speed
+
+        # Scale factor polynomial
+        m = 0.3
+        self.a, self.b, self.c = 4*(m-1)/self.apply_frames**2, (4-4*m)/self.apply_frames, m
 
     def frame(self):
         if self.initial_delay > 0:
@@ -152,7 +158,8 @@ class ProjectileFragGrenade(Projectile):
             return
         self.apply_frames -= 1
         self.theta += self.omega
-        # self.img = pygame.transform.rotate(self.img, self.omega) # Change
+        fac = self.a*self.apply_frames**2 + self.b*self.apply_frames + self.c
+        self.img = pygame.transform.scale_by(pygame.transform.rotate(self.max_img, int(self.theta)), fac) # Change
         if self.apply_frames > 0:
             G.WINDOW.blit(self.img, (self.x, self.y))
             self.x += self.dx * self.speed
