@@ -31,6 +31,8 @@ class Character(pygame.sprite.Sprite):
         self.max_pin_health = self.pin_health
         self.min_pin_health = -self.pin_health
         self.pinr_multiplier = 2
+        self.pin_buffer = G.FPS * 1
+        self.max_pin_buffer = self.pin_buffer
 
         self.supercombine_health = self.health // 2
         self.max_supercombine_health = self.supercombine_health
@@ -42,7 +44,14 @@ class Character(pygame.sprite.Sprite):
         self.shoot_while_move = False
 
     def frame(self):
-        self.pin_health = min(self.max_pin_health, self.pin_health + self.pin_health_regen)
+        if -1 <= self.pin_health < 0 and self.pin_buffer > 0:
+            self.pin_buffer -= 1
+            if self.pin_buffer == 0:
+                self.pin_buffer = self.max_pin_buffer
+                self.pin_health = 1
+        else:
+            self.pin_health = int(min(self.max_pin_health, self.pin_health + self.pin_health_regen))
+
         self.supercombine_health = min(self.max_supercombine_health, self.supercombine_health +
                                        self.supercombine_regen)
         self.draw()
