@@ -43,7 +43,7 @@ class WeaponManager:
         else:
             self.acquisition_timer = randint(*self.acquisition_time)
 
-        self.weapon.frame(rect_center(self.attached.rect), self.firing_pos)
+        self.weapon.frame(self.attached.get_firing_pos(), self.firing_pos)
         self.firing = self.weapon.firing
         if not self.firing:
             self.cooldown_timer -= 1

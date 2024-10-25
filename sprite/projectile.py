@@ -103,7 +103,7 @@ class ProjectileBolt(Projectile):
         self.dmg = 20
         self.drawr = 3
         self.x, self.y = start
-        self.speed = 5
+        self.speed = 10
         self.done = False
         dis, self.dx, self.dy = displacement(start, end)
         self.apply_frames = ceil(dis/self.speed)
@@ -123,6 +123,11 @@ class ProjectileBolt(Projectile):
             self._damage()
             self.done = True
             self.kill()
+
+class ProjectilePlasmaRifle(ProjectileBolt):
+    def __init__(self, start, end, initial_delay = 0):
+        super().__init__(start, end, initial_delay)
+
 
 class ProjectileSpark(ProjectileBolt):
     def __init__(self, start, end = None, initial_delay = 0):

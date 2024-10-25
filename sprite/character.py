@@ -18,6 +18,7 @@ class Character(pygame.sprite.Sprite):
         self.hitbox_radius = (self.rect.width + self.rect.height)/4
         self.selected = False
         self.theta = 0
+        self.firing_dx, self.firing_dy = 0, 0
 
         # Usage
         self.speed = 1
@@ -31,7 +32,7 @@ class Character(pygame.sprite.Sprite):
         self.max_pin_health = self.pin_health
         self.min_pin_health = -self.pin_health
         self.pinr_multiplier = 2
-        self.pin_buffer = G.FPS * 1
+        self.pin_buffer = G.FPS * 2
         self.max_pin_buffer = self.pin_buffer
 
         self.supercombine_health = self.health // 2
@@ -76,6 +77,7 @@ class Character(pygame.sprite.Sprite):
             self.x += dx * self.speed
             self.y += dy * self.speed
 
+
     def draw(self):
         self.rect.x, self.rect.y = int(self.x), int(self.y)
         G.WINDOW.blit(self.image,(self.rect.x, self.rect.y))
@@ -88,6 +90,10 @@ class Character(pygame.sprite.Sprite):
 
     def set_theta(self, theta: float):
         self.theta = theta
+
+    def get_firing_pos(self) -> Tuple[int, int]:
+        mid = rect_center(self.rect)
+        return (int(mid[0] + self.firing_dx), int(mid[1] + self.firing_dy))
 
 
 class Enemy(Character):

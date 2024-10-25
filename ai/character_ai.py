@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-from random import randint
+from random import randint, choice
 
 import G
 from weapons.weapon import *
@@ -44,7 +44,7 @@ class ControllableCharacterAI(CharacterAI):
         self.char.x, self.char.y = 300, 800
         self.char.dstx, self.char.dsty = 300, 800
         G.CHARS_ALL.add(self.char)
-        self.weapon = WeapShotgun() # WeapAssaultRifle()
+        self.weapon = WeapAssaultRifle() # WeapAssaultRifle()
         self.grenade = WeapFragGrenade()
         self.weapon_manager = WeaponManager(self.char, self.weapon, self.grenade)
 
@@ -74,7 +74,7 @@ class EnemyCharacterAI(CharacterAI):
         self.char.dstx = self.char.x
         self.char.dsty = G.HEIGHT + 100
         G.CHARS_ALL.add(self.char)
-        self.weapon = WeapNeedler()
+        self.weapon = choice((WeapNeedler(), WeapPlasmaRifle()))
         self.weapon_manager = WeaponManager(self.char, self.weapon)
 
     def _update_desination(self):

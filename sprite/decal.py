@@ -89,7 +89,7 @@ class BulletImpact(Decal):
         super().__init__(start, duration)
         theta = np.arctan2(direction[1], direction[0]) * 360 / G.TAU + 90
         fpath = 'assets/decals/impact/small_bullet_impact.png'
-        bullet = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (10, 10)) # save image later
+        bullet = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (7, 7)) # save image later
         self.rot = pygame.transform.rotate(bullet, theta)
         r = self.rot.get_rect()
         r.x = start[0]
