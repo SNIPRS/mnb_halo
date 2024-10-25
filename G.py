@@ -39,7 +39,7 @@ def PLAY_SOUND(sound: pygame.mixer.Sound):
             pygame.mixer.Channel(i).play(sound)
             return
 
-def QUEUE_SOUND(sounds: List[pygame.mixer.Sound]):
+def QUEUE_SOUNDS(sounds: List[pygame.mixer.Sound]):
     for i in range(MIXER_CHANNELS):
         if not pygame.mixer.Channel(i).get_busy():
             for s in sounds:

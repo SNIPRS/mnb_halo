@@ -20,8 +20,8 @@ class Decal(pygame.sprite.Sprite):
 
 class DecalBulletCasing(Decal):
     def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 7*G.FPS,
-                 flight_duration: int = 1*G.FPS, speed: float = 3, omega: float = 6, r: int = 2,
-                 spread: float = 0.5, colour: Tuple[int, int, int] = ((150, 100, 0)),
+                 flight_duration: int = 1*G.FPS, speed: float = 3, omega: float = 6, r: int = 1.5,
+                 spread: float = 0.5, colour: Tuple[int, int, int] = ((175, 125, 0)),
                  thickness: int = 1): # Everything in radians
         super().__init__(start, duration)
         self.start = start
@@ -62,6 +62,26 @@ class DecalBulletCasing(Decal):
             self._draw()
         else:
             self.kill()
+
+class DecalShotgunCasing(DecalBulletCasing):
+    def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], type='default'):
+        super().__init__(start, direction)
+        self.speed *= 1.5
+        self.omega *= 1.5
+        self.thickness = 2
+        self.r = 2
+        self.casing_len = 1.5 # unused
+        if True: # type == 'default'
+            self.casing_colour = (127, 0, 0)
+
+    def _draw(self):
+        c, s = np.cos(self.theta) * self.r, np.sin(self.theta) * self.r
+        start = (self.x + c, self.y + s)
+        end = (self.x - c, self.y - s)
+        cend = (self.x - c*0.5, self.y - s*0.5)
+        pygame.draw.line(G.WINDOW, self.colour, start, end, self.thickness)
+        pygame.draw.line(G.WINDOW, self.casing_colour, start, cend, self.thickness)
+
 
 class BulletImpact(Decal):
     def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 10*G.FPS,

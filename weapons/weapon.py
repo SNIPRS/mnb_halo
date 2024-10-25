@@ -54,8 +54,8 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
         self.cooldown = [int(3*G.FPS), int(6*G.FPS)]
         self.projectile = ProjectileBullet
 
-        self.fire_sound = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
-        self.reload_sound = pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
+        self.sound_fire = pygame.mixer.Sound("./assets/sounds/ar_fire.wav")
+        self.sound_reload = pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
 
         # State variables
         self.spread = self.error
@@ -79,8 +79,8 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
         self.cooldown = [int(params['cooldown'][0]*G.FPS), int(params['cooldown'][1]*G.FPS)]
         self.projectile = params['projectile']
 
-        self.fire_sound = params['sound_fire']
-        self.reload_sound = params['sound_reload']
+        self.sound_fire = params['sound_fire']
+        self.sound_reload = params['sound_reload']
 
         # State variables
         self.spread = self.error
@@ -105,11 +105,10 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         if self.firing:
             if self.firing_timer <= 0 and self.burst > 0 and start is not None and end is not None:
-                target = self._target_point(start, end)
-                self._shot(start, target)
+                self._shot(start, end)
                 self.burst -= 1
                 self.mag -= 1
-                subburst = random() <= self.subburst_probability
+                subburst = random() < self.subburst_probability
                 self.firing_timer = self.firerate + randint(*self.subburst_delay) if subburst \
                     else self.firerate
                 self.spread = self.error if subburst else self.spread + self.spread_heat
@@ -131,7 +130,8 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
                     self._reload()
  
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
-        G.PLAY_SOUND(self.fire_sound)
+        end = self._target_point(start, end)
+        G.PLAY_SOUND(self.sound_fire)
         proj = self.projectile(start, end)
         _, dx, dy = displacement(start, end)
         casing = DecalBulletCasing(start, (dx, dy))
@@ -140,7 +140,7 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
 
     def _reload(self):
         if self.mag != self.mag_cap:
-            G.PLAY_SOUND(self.reload_sound)
+            G.PLAY_SOUND(self.sound_reload)
         self.mag = self.mag_cap
 
     def _reset_burst(self):
@@ -148,6 +148,32 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
         self.target_rect = None
         self.burst = min(self.mag, randint(*self.burst_range))
 
+class WeapShotgun(WeapAssaultRifle):
+    def __init__(self, params: Optional[dict] = WEAPON_SHOTGUN):
+        super().__init__(params)
+        # Sound reload is actually the pumping sound
+        self.sound_pump = params['sound_pump']
+        self.sound_open = params['sound_open']
+        self.sound_close = params['sound_close']
+        self.pellets = params['pellets']
+
+    def _shot(self, start, end):
+        G.PLAY_SOUND(self.sound_fire)
+        for _ in range(self.pellets):
+            tend = self._target_point(start, end)
+            proj = self.projectile(start, tend)
+            _, dx, dy = displacement(start, tend)
+            G.FIRING_EFFECTS.add(proj)
+        casing = DecalShotgunCasing(start, (dx, dy))
+        G.DECALS.add(casing)
+        if self.mag > 0:
+            G.PLAY_SOUND(self.sound_pump)
+
+    def _reload(self):
+        if self.mag != self.mag_cap:
+            G.QUEUE_SOUNDS([self.sound_open, self.sound_reload, self.sound_close] +
+                           (self.mag_cap-self.mag-1)*[self.sound_reload])
+        self.mag = self.mag_cap
 
 class WeapPlasmaRifle(WeapAssaultRifle):
     def __init__(self):
@@ -161,7 +187,8 @@ class WeapPlasmaRifle(WeapAssaultRifle):
         self.firerate = self.firerate_orig
 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
-        G.PLAY_SOUND(self.fire_sound)
+        end = self._target_point(start, end)
+        G.PLAY_SOUND(self.sound_fire)
         proj = self.projectile(start, end)
         G.FIRING_EFFECTS.add(proj)
         self.firerate = int(min(self.firerate_orig * 2, self.firerate * self.firerate_decay))
@@ -171,7 +198,8 @@ class WeapNeedler(WeapAssaultRifle):
         super().__init__(WEAPON_NEEDLER)
 
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
-        G.PLAY_SOUND(self.fire_sound)
+        end = self._target_point(start, end)
+        G.PLAY_SOUND(self.sound_fire)
         proj = ProjectileNeedler(start, end, target=self.target_rect)
         G.FIRING_EFFECTS.add(proj)
 

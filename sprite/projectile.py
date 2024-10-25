@@ -65,13 +65,25 @@ class ProjectileBullet(Projectile):
 
         self.colour = (255, 234, 0)
         self.width = 1
-        self.dmg = 10
+        self.dmg = 20
         self.done = False
         self.impact_type = 'bullet'
 
     def apply(self):
         pygame.draw.line(G.WINDOW, (255, 255, 255), self.start, self.end, 2)
         pygame.draw.line(G.WINDOW, self.colour, self.start, self.end, self.width)
+        self._apply_impact()
+        self._damage()
+        self.done = True
+
+class ProjectileShotgun(Projectile):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
+        super().__init__(start, end, initial_delay)
+        self.dmg = 25
+        self.done = False
+        self.impact_type = 'mini_burn'
+
+    def apply(self):
         self._apply_impact()
         self._damage()
         self.done = True
