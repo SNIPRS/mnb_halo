@@ -1,6 +1,6 @@
 import pygame 
 import numpy as np
-from random import random
+from random import random, randint
 from typing import Tuple, Optional
 
 import G
@@ -68,7 +68,7 @@ class BulletImpact(Decal):
                  size: int = 0, decay_time: int = 3*G.FPS):
         super().__init__(start, duration)
         theta = np.arctan2(direction[1], direction[0]) * 360 / G.TAU + 90
-        fpath = 'assets/decals/small_bullet_impact.png'
+        fpath = 'assets/decals/impact/small_bullet_impact.png'
         bullet = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (10, 10)) # save image later
         self.rot = pygame.transform.rotate(bullet, theta)
         r = self.rot.get_rect()
@@ -88,6 +88,29 @@ class BulletImpact(Decal):
             self.alph -= self.alph_decay
             self.rot.set_alpha(self.alph)
         self._draw()
+        if self.duration < 0:
+            self.kill()
+
+class SimpleBurn(Decal):
+    def __init__(self, start: Tuple[float, float], duration: int = 10*G.FPS,
+                 size: str = 'mini', decay_time: int = 3*G.FPS):
+        super().__init__(start, duration)
+        if size == 'mini':
+            fname = f'assets/decals/burns/mini_burn{randint(0,2)}.png'
+        else:
+            fname = f'assets/decals/burns/micro_burn{randint(0,2)}.png'
+        self.img = pygame.image.load(fname).convert_alpha()
+        self.start = center_rect(self.img.get_rect(), *start)
+        self.decay_time = decay_time
+        self.alph_decay = 255 // decay_time
+        self.alph = 255
+
+    def frame(self):
+        self.duration -= 1
+        if self.duration < self.decay_time:
+            self.alph -= self.alph_decay
+            self.img.set_alpha(self.alph)
+        G.WINDOW.blit(self.img, self.start)
         if self.duration < 0:
             self.kill()
 
@@ -122,6 +145,7 @@ class NeedlerImpact(Decal):
         folder = 'assets/decals/explosion/needler'
         self.img = pygame.image.load(random_file(folder)).convert_alpha()
         self.start = center_rect(self.img.get_rect(), *start)
+        self.orig_start = start
 
     def frame(self):
         if self.duration > 0:
@@ -130,5 +154,7 @@ class NeedlerImpact(Decal):
             self.duration -= 1
         else:
             G.WINDOW.blit(self.img, self.start)
+            impact = SimpleBurn(self.orig_start)
+            G.DECALS.add(impact)
             self.kill()
         

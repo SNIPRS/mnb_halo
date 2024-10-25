@@ -52,6 +52,12 @@ class Projectile(pygame.sprite.Sprite):
         elif self.impact_type == 'explosion':
             impact = Explosion(self.end)
             G.DECALS.add(impact)
+        if self.impact_type == 'mini_burn':
+            impact = SimpleBurn(self.end, size='mini')
+            G.DECALS.add(impact)
+        if self.impact_type == 'micro_burn':
+            impact = SimpleBurn(self.end, size='micro')
+            G.DECALS.add(impact)
 
 class ProjectileBullet(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
@@ -121,7 +127,7 @@ class ProjectileShrapnel(ProjectileSpark):
         super().__init__(start, end, initial_delay)
         self.dmg = randint(5, 25)
         self.colour = (200, 200, 100)
-        self.impact_type = 'bullet'
+        self.impact_type = 'micro_burn'
 
 class ProjectileFragGrenade(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
@@ -135,8 +141,8 @@ class ProjectileFragGrenade(Projectile):
         self.end = end
         self.r = 5 * G.UNIT
         self.fragr = 2 * self.r
-        self.n_frag = randint(3, 5)
-        self.n_spark = randint(3, 5)
+        self.n_frag = randint(5, 8)
+        self.n_spark = randint(5, 10)
 
         fpath = 'assets/weapons/grenade.png'
         self.max_size = 20
