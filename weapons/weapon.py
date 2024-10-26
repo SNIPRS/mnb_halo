@@ -115,6 +115,7 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
             if self.mag <= 0:
                 self.firing = False
                 self.reload_timer = randint(*self.reload_time)
+                G.PLAY_SOUND(self.sound_reload)
                 return
             if self.burst <= 0:
                 self.firing = False
@@ -139,8 +140,6 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
         G.DECALS.add(casing)
 
     def _reload(self):
-        if self.mag != self.mag_cap:
-            G.PLAY_SOUND(self.sound_reload)
         self.mag = self.mag_cap
 
     def _reset_burst(self):
@@ -191,10 +190,7 @@ class WeapShotgun(WeapAssaultRifle):
             G.PLAY_SOUND(self.sound_pump)
 
     def _reload(self):
-        if self.mag != self.mag_cap:
-            print('reload')
-            G.PLAY_SOUND(self.sound_reload)
-        self.mag = self.mag_cap
+        pass
 
 class WeapPlasmaRifle(WeapAssaultRifle):
     def __init__(self):

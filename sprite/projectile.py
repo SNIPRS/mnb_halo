@@ -162,7 +162,7 @@ class ProjectileFragGrenade(Projectile):
         self.end = end
         self.r = 5 * G.UNIT
         self.fragr = 1.3 * self.r
-        self.n_frag = randint(5, 8)
+        self.n_frag = randint(12, 16)
         self.n_spark = randint(5, 10)
 
         fpath = 'assets/weapons/grenade.png'
