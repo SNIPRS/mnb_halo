@@ -228,6 +228,7 @@ class WeapNeedler(WeapAssaultRifle):
 class WeapFragGrenade(Weapon):
     def __init__(self):
         super().__init__()
+        self.sound = G.SOUNDS['grenade_throw']
         self.error = 12
         self.safe_d = G.UNIT * 8
 
@@ -235,5 +236,6 @@ class WeapFragGrenade(Weapon):
         # Give a start and end when you want to fire a grenade
         if start is not None and end is not None:
             target = self._target_point(start, end)
+            G.PLAY_SOUND(self.sound)
             proj = ProjectileFragGrenade(start, target, initial_delay = randint(0, G.FPS))
             G.FIRING_EFFECTS.add(proj)

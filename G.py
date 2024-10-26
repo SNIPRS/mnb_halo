@@ -46,6 +46,8 @@ def QUEUE_SOUNDS(sounds: List[pygame.mixer.Sound]):
                 pygame.mixer.Channel(i).queue(s)
             return
 
-RANDOM_OBJ = {
-    'needler_expl': pygame.mixer.Sound("./assets/sounds/needler_expl_3.wav")
+SOUNDS = {
+    'needler_expl': pygame.mixer.Sound("./assets/sounds/needler_expl_3.wav"),
+    'grenade_expl': pygame.mixer.Sound("./assets/sounds/grenade_expl_0.wav"),
+    'grenade_throw': pygame.mixer.Sound('./assets/sounds/grenade_throw.wav'),
 }

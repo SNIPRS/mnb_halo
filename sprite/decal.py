@@ -179,7 +179,7 @@ class NeedlerImpact(Decal):
         else:
             G.WINDOW.blit(self.img, self.start)
             impact = SimpleBurn(self.orig_start)
-            G.PLAY_SOUND(G.RANDOM_OBJ['needler_expl'])
+            G.PLAY_SOUND(G.SOUNDS['needler_expl'])
             G.DECALS.add(impact)
             self.kill()
         

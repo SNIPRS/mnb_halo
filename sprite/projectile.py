@@ -166,6 +166,7 @@ class ProjectileFragGrenade(Projectile):
         self.n_spark = randint(5, 10)
 
         fpath = 'assets/weapons/grenade.png'
+        self.sound = G.SOUNDS['grenade_expl']
         self.max_size = 20
         self.max_img = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(),
                                                     (self.max_size , self.max_size))
@@ -194,6 +195,7 @@ class ProjectileFragGrenade(Projectile):
         else:
             G.WINDOW.blit(self.img, self.end)
             self._r_damage()
+            G.PLAY_SOUND(self.sound)
             self._apply_impact()
             self._create_fragments()
             self.done = True
