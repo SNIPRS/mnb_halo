@@ -1,6 +1,8 @@
 import pygame
 import numpy
-from typing import List
+from random import choice
+from typing import List, Union
+from enum import Enum
 
 # Globals
 
@@ -33,7 +35,9 @@ EVENTS = pygame.event.get()
 MIXER_CHANNELS = 25
 pygame.mixer.set_num_channels(MIXER_CHANNELS)
 
-def PLAY_SOUND(sound: pygame.mixer.Sound):
+def PLAY_SOUND(sound: Union[pygame.mixer.Sound, List[pygame.mixer.Sound]]):
+    if isinstance(sound, list):
+        sound = choice(list)
     for i in range(MIXER_CHANNELS):
         if not pygame.mixer.Channel(i).get_busy():
             pygame.mixer.Channel(i).play(sound)
@@ -45,6 +49,11 @@ def QUEUE_SOUNDS(sounds: List[pygame.mixer.Sound]):
             for s in sounds:
                 pygame.mixer.Channel(i).queue(s)
             return
+
+class Sounds(Enum):
+    NEEDLER_EX = pygame.mixer.Sound("./assets/sounds/needler_expl_3.wav"),
+    GRENADE_EX = pygame.mixer.Sound("./assets/sounds/grenade_expl_0.wav"),
+    GRENADE_THROW = pygame.mixer.Sound('./assets/sounds/grenade_throw.wav'),
 
 SOUNDS = {
     'needler_expl': pygame.mixer.Sound("./assets/sounds/needler_expl_3.wav"),

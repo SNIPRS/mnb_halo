@@ -80,7 +80,7 @@ WEAPON_PLASMA_RIFLE = {
     'subburst_delay': [0.5, 1.0],
     'spread_heat': 2.5,
     'cooldown': [5, 8],
-    'projectile': ProjectileBolt,
+    'projectile': ProjectilePlasmaRifle,
 
     'sound_fire': pygame.mixer.Sound("./assets/sounds/pr_fire.wav"),
     'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav"),
@@ -106,3 +106,9 @@ WEAPON_NEEDLER = {
     'sound_reload': pygame.mixer.Sound("./assets/sounds/needler_reload.wav"),
 }
 
+WEAPON_FRAG_GRENADE = {
+    'sound': G.SOUNDS['grenade_throw'],
+    'error': 12,
+    'safe_d': G.UNIT * 8,
+
+}

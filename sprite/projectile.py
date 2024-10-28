@@ -128,10 +128,41 @@ class ProjectileBolt(Projectile):
             self.done = True
             self.kill()
 
-class ProjectilePlasmaRifle(ProjectileBolt):
-    def __init__(self, start, end, initial_delay = 0):
+class ProjectilePlasmaRifle(Projectile):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
         super().__init__(start, end, initial_delay)
+        self.colour = (100, 100, 255)
+        self.colourl = (150, 150, 255)
+        self.taill = 10
+        self.dmg = 20
+        self.drawr = 2
+        self.x, self.y = start
+        self.speed = 10
+        self.done = False
+        dis, self.dx, self.dy = displacement(start, end)
+        self.apply_frames = ceil(dis/self.speed)
 
+    def frame(self):
+        if self.initial_delay > 0:
+            self.initial_delay -= 1
+            return
+        self.apply_frames -= 1
+        if self.apply_frames > 0:
+            pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+            pygame.draw.line(G.WINDOW, self.colour, (self.x, self.y),
+                             (self.x - self.dx*self.taill, self.y- self.dy*self.taill), width=self.drawr)
+            pygame.draw.circle(G.WINDOW, self.colourl, (self.x, self.y), 1)
+            pygame.draw.line(G.WINDOW, self.colourl, (self.x, self.y),
+                             (self.x - self.dx*self.taill, self.y- self.dy*self.taill), width=1)
+            
+            self.x += self.dx * self.speed
+            self.y += self.dy * self.speed
+        else:
+            pygame.draw.circle(G.WINDOW, self.colour, self.end, self.drawr)
+            self._apply_impact()
+            self._damage()
+            self.done = True
+            self.kill()
 
 class ProjectileSpark(ProjectileBolt):
     def __init__(self, start, end = None, initial_delay = 0):
@@ -151,9 +182,12 @@ class ProjectileShrapnel(ProjectileSpark):
         self.impact_type = 'micro_burn'
 
 class ProjectileFragGrenade(Projectile):
-    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
+                 params: dict = None):
         super().__init__(start, end, initial_delay)
         print('grenade')
+        if params is None:
+            params = {}
         self.theta = randint(-180, 180) # Degrees
         self.omega = randint(2, 6) * choice([-1, 1]) * 360/G.FPS
         self.dmg = 200 + randint(-25, 100)
@@ -268,6 +302,8 @@ class ProjectileNeedler(ProjectileTracking):
         self.colour = (255, 50, 100)
         self.tail_len = 3
         self.tail_colour = (255, 150, 200)
+        self.colourl = (170, 70, 100)
+        self.lenl = 15
         self.dmg = 15
         self.supercombine_dmg = 15
 
@@ -304,9 +340,12 @@ class ProjectileNeedler(ProjectileTracking):
             return
         self.x += ux * self.speed
         self.y += uy * self.speed
+        # pygame.draw.aaline(G.WINDOW, self.colourl, (self.x, self.y),
+        #                 (self.x - ux*self.lenl, self.y- uy*self.lenl))
         pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
         pygame.draw.line(G.WINDOW, self.tail_colour, (self.x, self.y),
-                         (self.x - ux*self.tail_len, self.y - uy*self.tail_len))
+                         (self.x - ux*self.tail_len, self.y - uy*self.tail_len), width=1)
+        
 
 
 
