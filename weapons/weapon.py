@@ -167,6 +167,10 @@ class WeapBattleRifle(WeapAssaultRifle):
         self.spread = self.error
 
 
+class WeapMagnum(WeapAssaultRifle):
+    def __init__(self, params: Optional[dict] = WEAPON_MAGNUM):
+        super().__init__(params)
+
 class WeapShotgun(WeapAssaultRifle):
     def __init__(self, params: Optional[dict] = WEAPON_SHOTGUN):
         super().__init__(params)

@@ -104,11 +104,21 @@ class DecalShotgunCasing(DecalBulletCasing):
 
 class BulletImpact(Decal):
     def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 10*G.FPS,
-                 size: int = 0, decay_time: int = 3*G.FPS):
+                 size: str = 'small', decay_time: int = 3*G.FPS):
         super().__init__(start, duration)
+        
+        if size == 'large':
+            bullet = G.Images.BULLET_IMPACT_LARGE.value
+            flash = G.Images.SMALL_SPARK.value
+            # Draw flash on first frame
+            loc = center_rect(flash.get_rect(), *start)
+            G.WINDOW.blit(flash, loc)
+        else:
+            bullet = G.Images.BULLET_IMPACT.value
+        self.size = size
+        self.loc = center_rect(bullet.get_rect(), *start)
+
         theta = np.arctan2(direction[1], direction[0]) * 360 / G.TAU + 90
-        fpath = 'assets/decals/impact/small_bullet_impact.png'
-        bullet = pygame.transform.smoothscale(pygame.image.load(fpath).convert_alpha(), (7, 7)) # save image later
         self.rot = pygame.transform.rotate(bullet, theta)
         r = self.rot.get_rect()
         r.x = start[0]
@@ -119,7 +129,7 @@ class BulletImpact(Decal):
         self.alph = 255
 
     def _draw(self):
-        G.WINDOW.blit(self.rot, self.rect)
+        G.WINDOW.blit(self.rot, self.loc)
 
     def frame(self):
         self.duration -= 1

@@ -50,6 +50,10 @@ class Projectile(pygame.sprite.Sprite):
             _, dx, dy = displacement(self.start, self.end)
             impact = BulletImpact(self.end, (dx, dy))
             G.DECALS.add(impact)
+        if self.impact_type == 'bullet_large':
+            _, dx, dy = displacement(self.start, self.end)
+            impact = BulletImpact(self.end, (dx, dy), size='large')
+            G.DECALS.add(impact)
         elif self.impact_type == 'explosion':
             impact = Explosion(self.end)
             G.DECALS.add(impact)
@@ -83,6 +87,14 @@ class ProjectileBullet(Projectile):
         self._apply_impact()
         self._damage()
         self.done = True
+
+class ProjectileMagnum(Projectile):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
+        super().__init__(start, end, initial_delay)
+        self.dmg = 60
+        self.done = False
+        self.impact_type = 'bullet_large'
+        self.initial_delay  = initial_delay
 
 class ProjectileShotgun(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
@@ -179,7 +191,9 @@ class ProjectilePlasmaPistol(ProjectilePlasmaRifle):
         self.dmg = 15
         self.drawr = 2
         self.impact_type = 'pp'
-
+        self.speed = 8
+        dis, self.dx, self.dy = displacement(start, end)
+        self.apply_frames = ceil(dis/self.speed)
 
 class ProjectileSpark(ProjectileBolt):
     def __init__(self, start, end = None, initial_delay = 0, colour = (200, 200, 100),

@@ -56,6 +56,10 @@ class Sounds(Enum):
     GRENADE_THROW = pygame.mixer.Sound('./assets/sounds/grenade_throw.wav'),
 
 class Images(Enum):
+    BULLET_IMPACT_LARGE = pygame.transform.smoothscale(
+        pygame.image.load('assets/decals/impact/small_bullet_impact.png').convert_alpha(), (10, 10))
+    BULLET_IMPACT = pygame.transform.smoothscale(
+        pygame.image.load('assets/decals/impact/small_bullet_impact.png').convert_alpha(), (7, 7))
     PLASMABURN_CENTER = pygame.image.load('assets/decals/burns/plasma_center0.png').convert_alpha()
     PLASMABURN_PR = pygame.transform.smoothscale(
         pygame.image.load('assets/decals/explosion/plasma_mark/blue.png').convert_alpha(), (24, 24))
@@ -63,6 +67,8 @@ class Images(Enum):
         pygame.image.load('assets/decals/explosion/plasma_mark/green.png').convert_alpha(), (20, 20))
     PLASMABURN_PPOC = pygame.transform.smoothscale(
         pygame.image.load('assets/decals/explosion/plasma_mark/green.png').convert_alpha(), (60, 60))
+    MICRO_SPARK = pygame.image.load('assets/decals/explosion/micro_spark/spark2.png').convert_alpha()
+    SMALL_SPARK = pygame.image.load('assets/decals/explosion/small_spark/spark0.png').convert_alpha()
 
 SOUNDS = {
     'needler_expl': pygame.mixer.Sound("./assets/sounds/needler_expl_3.wav"),
