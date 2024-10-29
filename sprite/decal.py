@@ -115,6 +115,38 @@ class BulletImpact(Decal):
         if self.duration < 0:
             self.kill()
 
+class PlasmaImpact(Decal):
+    def __init__(self, start: Tuple[float, float], duration: int = 10*G.FPS,
+                 colour: str = 'blue', decay_time: int = 3*G.FPS):
+        super().__init__(start, duration)
+        fname = f'assets/decals/burns/plasma_center0.png'
+        self.img = pygame.image.load(fname).convert_alpha()
+        self.start = center_rect(self.img.get_rect(), *start)
+        self.decay_time = decay_time
+        self.alph_decay = 255 // decay_time
+        self.alph = 255
+
+        fname = f'assets/decals/explosion/plasma_mark/{colour}.png'
+        self.imgb = pygame.image.load(fname).convert_alpha()
+        self.startb = center_rect(self.imgb.get_rect(), *start)
+        self.startb = self.startb[0]-1, self.startb[1]-1 # idk why
+        self.decay_timeb = decay_time
+        self.alph_decayb = 255 // decay_time
+        self.alphb = 255
+
+    def frame(self):
+        self.duration -= 1
+        self.alphb -= self.alph_decayb
+        if self.duration < self.decay_time:
+            self.alph -= self.alph_decay
+            self.img.set_alpha(self.alph)
+        G.WINDOW.blit(self.img, self.start)
+        if self.alphb > 0:
+            self.imgb.set_alpha(self.alphb)
+            G.WINDOW.blit(self.imgb, self.startb)
+        if self.duration < 0:
+            self.kill()
+
 class SimpleBurn(Decal):
     def __init__(self, start: Tuple[float, float], duration: int = 10*G.FPS,
                  size: str = 'mini', decay_time: int = 3*G.FPS):

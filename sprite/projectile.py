@@ -52,11 +52,14 @@ class Projectile(pygame.sprite.Sprite):
         elif self.impact_type == 'explosion':
             impact = Explosion(self.end)
             G.DECALS.add(impact)
-        if self.impact_type == 'mini_burn':
+        elif self.impact_type == 'mini_burn':
             impact = SimpleBurn(self.end, size='mini')
             G.DECALS.add(impact)
-        if self.impact_type == 'micro_burn':
+        elif self.impact_type == 'micro_burn':
             impact = SimpleBurn(self.end, size='micro')
+            G.DECALS.add(impact)
+        elif self.impact_type == 'plasma_burn_blue':
+            impact = PlasmaImpact(self.end, colour='blue')
             G.DECALS.add(impact)
 
 class ProjectileBullet(Projectile):
@@ -141,6 +144,7 @@ class ProjectilePlasmaRifle(Projectile):
         self.done = False
         dis, self.dx, self.dy = displacement(start, end)
         self.apply_frames = ceil(dis/self.speed)
+        self.impact_type = 'plasma_burn_blue'
 
     def frame(self):
         if self.initial_delay > 0:
@@ -163,6 +167,9 @@ class ProjectilePlasmaRifle(Projectile):
             self._damage()
             self.done = True
             self.kill()
+
+class ProjectileShredder(Projectile):
+    pass
 
 class ProjectileSpark(ProjectileBolt):
     def __init__(self, start, end = None, initial_delay = 0):
