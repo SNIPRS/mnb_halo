@@ -55,6 +55,15 @@ class Sounds(Enum):
     GRENADE_EX = pygame.mixer.Sound("./assets/sounds/grenade_expl_0.wav"),
     GRENADE_THROW = pygame.mixer.Sound('./assets/sounds/grenade_throw.wav'),
 
+class Images(Enum):
+    PLASMABURN_CENTER = pygame.image.load('assets/decals/burns/plasma_center0.png').convert_alpha()
+    PLASMABURN_PR = pygame.transform.smoothscale(
+        pygame.image.load('assets/decals/explosion/plasma_mark/blue.png').convert_alpha(), (24, 24))
+    PLASMABURN_PP = pygame.transform.smoothscale(
+        pygame.image.load('assets/decals/explosion/plasma_mark/green.png').convert_alpha(), (20, 20))
+    PLASMABURN_PPOC = pygame.transform.smoothscale(
+        pygame.image.load('assets/decals/explosion/plasma_mark/green.png').convert_alpha(), (60, 60))
+
 SOUNDS = {
     'needler_expl': pygame.mixer.Sound("./assets/sounds/needler_expl_3.wav"),
     'grenade_expl': pygame.mixer.Sound("./assets/sounds/grenade_expl_0.wav"),

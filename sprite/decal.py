@@ -132,17 +132,21 @@ class BulletImpact(Decal):
 
 class PlasmaImpact(Decal):
     def __init__(self, start: Tuple[float, float], duration: int = 10*G.FPS,
-                 colour: str = 'blue', decay_time: int = 3*G.FPS):
+                 type: str = 'blue', decay_time: int = 3*G.FPS):
         super().__init__(start, duration)
-        fname = f'assets/decals/burns/plasma_center0.png'
-        self.img = pygame.image.load(fname).convert_alpha()
+        self.img = G.Images.PLASMABURN_CENTER.value
         self.start = center_rect(self.img.get_rect(), *start)
         self.decay_time = decay_time
         self.alph_decay = 255 // decay_time
         self.alph = 255
 
-        fname = f'assets/decals/explosion/plasma_mark/{colour}.png'
-        self.imgb = pygame.image.load(fname).convert_alpha()
+        if type == 'pp':
+            self.imgb = G.Images.PLASMABURN_PP.value
+        elif type == 'ppoc':
+            self.imgb = G.Images.PLASMABURN_PPOC.value
+        else:
+            self.imgb = G.Images.PLASMABURN_PR.value
+
         self.startb = center_rect(self.imgb.get_rect(), *start)
         self.startb = self.startb[0], self.startb[1] # idk why
         self.decay_timeb = decay_time

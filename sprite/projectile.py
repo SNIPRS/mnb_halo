@@ -59,11 +59,8 @@ class Projectile(pygame.sprite.Sprite):
         elif self.impact_type == 'micro_burn':
             impact = SimpleBurn(self.end, size='micro')
             G.DECALS.add(impact)
-        elif self.impact_type == 'plasma_burn_blue':
-            impact = PlasmaImpact(self.end, colour='blue')
-            G.DECALS.add(impact)
-        elif self.impact_type == 'plasma_burn_green':
-            impact = PlasmaImpact(self.end, colour='green')
+        elif self.impact_type in ['pr', 'pp', 'ppoc']:
+            impact = PlasmaImpact(self.end, type=self.impact_type)
             G.DECALS.add(impact)
 
 class ProjectileBullet(Projectile):
@@ -148,7 +145,7 @@ class ProjectilePlasmaRifle(Projectile):
         self.done = False
         dis, self.dx, self.dy = displacement(start, end)
         self.apply_frames = ceil(dis/self.speed)
-        self.impact_type = 'plasma_burn_blue'
+        self.impact_type = 'pr'
 
     def frame(self):
         if self.initial_delay > 0:
@@ -181,25 +178,36 @@ class ProjectilePlasmaPistol(ProjectilePlasmaRifle):
         self.taill = 7
         self.dmg = 15
         self.drawr = 2
-        self.impact_type = 'plasma_burn_green'
+        self.impact_type = 'pp'
 
 
 class ProjectileSpark(ProjectileBolt):
-    def __init__(self, start, end = None, initial_delay = 0):
+    def __init__(self, start, end = None, initial_delay = 0, colour = (200, 200, 100),
+                 speed: Tuple = (3, 10)):
         super().__init__(start, end, initial_delay)
         self.dmg = 0
-        self.colour = (200, 200, 100)
+        self.colour = colour
         self.drawr = 1
-        self.speed = randint(5, 20)
+        self.speed = randint(*speed)
         dis, self.dx, self.dy = displacement(start, end)
         self.apply_frames = ceil(dis/self.speed)
 
+    def _damage(self):
+        return
+
 class ProjectileShrapnel(ProjectileSpark):
-    def __init__(self, start, end = None, initial_delay = 0):
+    def __init__(self, start, end = None, initial_delay = 0, colour = (200, 200, 100),
+                 speed: Tuple = (3, 10)):
         super().__init__(start, end, initial_delay)
         self.dmg = randint(5, 25)
-        self.colour = (200, 200, 100)
+        self.colour = colour
+        self.drawr = 1
+        self.speed = randint(*speed)
         self.impact_type = 'micro_burn'
+
+    def _damage(self):
+        for c in G.CHARS_ALL:
+            c.hit(self.end, self.dmg)
 
 class ProjectileFragGrenade(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
@@ -393,10 +401,18 @@ class ProjectilePlasmaOvercharge(ProjectileNeedler):
         self.spark_prob = 10 / G.FPS
         # self.sparks = deque() # deque of coordinates
         self.sparkr = 1
+        self.impact_type = 'ppoc'
+
+        self.fragr = 4 * G.UNIT
+        self.n_spark = randint(5, 10)
 
     def _draw(self, ux, uy, end=False):
         if end:
             self.x, self.y = self.end
+            impact = PlasmaImpact(self.end, type=self.impact_type)
+            G.DECALS.add(impact)
+            self._create_fragments()
+            return
         pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.r)
         pygame.draw.circle(G.WINDOW, self.ccolour, (self.x, self.y), self.cr)
 
@@ -408,4 +424,9 @@ class ProjectilePlasmaOvercharge(ProjectileNeedler):
             spark = DecalPoint((self.x, self.y), colour=self.ccolour, r=1)
             G.DECALS.add(spark)
 
+    def _create_fragments(self):
+        for _ in range(self.n_spark):
+            dst = random_sample_circle(self.end, self.fragr)
+            proj = ProjectileSpark(self.end, dst, colour=self.ccolour, speed=(3, 6))
+            G.FIRING_EFFECTS.add(proj)
 
