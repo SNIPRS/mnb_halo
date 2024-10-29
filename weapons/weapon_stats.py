@@ -38,8 +38,8 @@ WEAPON_MAGNUM = {
     'cooldown': [3, 5], # Time to wait after a burst
     'projectile': ProjectileMagnum, # Projectile
 
-    'sound_fire': pygame.mixer.Sound("./assets/sounds/ar_fire.wav"),
-    'sound_reload': pygame.mixer.Sound("./assets/sounds/ar_reload.wav")
+    'sound_fire': pygame.mixer.Sound("./assets/sounds/pistol_fire.wav"),
+    'sound_reload': pygame.mixer.Sound("./assets/sounds/pistol_reload.wav")
 
 }
 
