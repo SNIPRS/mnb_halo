@@ -283,7 +283,7 @@ class ProjectileFragGrenade(Projectile):
             proj = ProjectileShrapnel(self.end, dst)
             G.FIRING_EFFECTS.add(proj)
         for _ in range(self.n_spark):
-            dst = random_sample_circle(self.end, self.fragr)
+            dst = random_sample_circle(self.end, self.fragr * 2)
             proj = ProjectileSpark(self.end, dst)
             G.FIRING_EFFECTS.add(proj)
 
@@ -435,7 +435,8 @@ class ProjectilePlasmaOvercharge(ProjectileNeedler):
         pygame.draw.line(G.WINDOW, self.ccolour, (self.x, self.y),
                          (self.x - ux*self.taills, self.y - uy*self.taills), width=1)
         if random() < self.spark_prob:
-            spark = DecalPoint((self.x, self.y), colour=self.ccolour, r=1)
+            v = (-ux*2, -uy*2)
+            spark = DecalPoint((self.x, self.y), colour=self.ccolour, r=1, velocity=v)
             G.DECALS.add(spark)
 
     def _create_fragments(self):

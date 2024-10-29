@@ -19,17 +19,21 @@ class Decal(pygame.sprite.Sprite):
 
 class DecalPoint(Decal):
     def __init__(self, start: Tuple[float, float], duration: Optional[int] = 0.5 * G.FPS,
-                 colour = 'green', r = 1, decay = True):
+                 colour = 'green', r = 1, decay = True, velocity: Tuple = None):
         super().__init__(start, duration)
         self.start = start
         self.duration = duration
         self.colour = colour
         self.r = r
         self.alpha = 255
+        self.velocity = velocity
 
     def frame(self):
         pygame.draw.circle(G.WINDOW, self.colour, self.start, self.r)
         self.duration -= 1
+        if self.velocity is not None:
+            self.start = (self.start[0] + self.velocity[0], self.start[1] + self.velocity[1])
+            
         if self.duration < 0:
             self.kill()
 

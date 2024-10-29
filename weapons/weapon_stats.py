@@ -27,7 +27,7 @@ WEAPON_ASSAULT_RIFLE = {
 
 WEAPON_MAGNUM = {
     'mag_cap': 12, # Magazine capacity
-    'firerate': 2, # Rounds per second
+    'firerate': 3, # Rounds per second
     'error': 1, # Error angle in degrees
     'aim_time': 2, # Takes this long to aim before firing
     'reload_time': [5, 7], # Seconds: min, max
