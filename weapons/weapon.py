@@ -210,6 +210,37 @@ class WeapPlasmaRifle(WeapAssaultRifle):
         G.FIRING_EFFECTS.add(proj)
         self.firerate = int(min(self.firerate_orig * 2, self.firerate * self.firerate_decay))
 
+class WeapPlasmaPistol(WeapAssaultRifle):
+    def __init__(self):
+        super().__init__(WEAPON_PLASMA_PISTOL)
+        # HaloR Plasma Repeater
+        self.overcharge_prob = WEAPON_PLASMA_PISTOL['overcharge_probability']
+        self.projectile_overcharge = WEAPON_PLASMA_PISTOL['projectile_overcharge']
+        self.sound_overcharge = WEAPON_PLASMA_PISTOL['sound_overcharge']
+        self.overcharge = False
+
+    def _reset_burst(self):
+        self.firing_timer = self.aim_time
+        self.target_rect = None
+        if random() < self.overcharge_prob:
+            self.overcharge = True
+            self.burst = 1
+        else:
+            self.burst = min(self.mag, randint(*self.burst_range))
+
+    def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
+        end = self._target_point(start, end)
+        if self.overcharge:
+            G.PLAY_SOUND(self.sound_overcharge)
+            proj = self.projectile_overcharge(start, end, target=self.target_rect)
+            G.FIRING_EFFECTS.add(proj)
+            self.overcharge = False
+            return
+        G.PLAY_SOUND(self.sound_fire)
+        proj = self.projectile(start, end)
+        G.FIRING_EFFECTS.add(proj)
+
+
 class WeapNeedler(WeapAssaultRifle):
     def __init__(self):
         super().__init__(WEAPON_NEEDLER)
@@ -217,6 +248,7 @@ class WeapNeedler(WeapAssaultRifle):
     def _shot(self, start: Tuple[float, float], end: Tuple[float, float]):
         end = self._target_point(start, end)
         G.PLAY_SOUND(self.sound_fire)
+        # proj = ProjectileNeedler(start, end, target=self.target_rect)
         proj = ProjectileNeedler(start, end, target=self.target_rect)
         G.FIRING_EFFECTS.add(proj)
 

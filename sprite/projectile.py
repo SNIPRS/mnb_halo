@@ -3,6 +3,7 @@ import numpy as np
 from math import ceil
 from typing import Tuple, Optional
 from random import randint, choice
+from collections import deque
 
 import G
 from sprite.decal import *
@@ -60,6 +61,9 @@ class Projectile(pygame.sprite.Sprite):
             G.DECALS.add(impact)
         elif self.impact_type == 'plasma_burn_blue':
             impact = PlasmaImpact(self.end, colour='blue')
+            G.DECALS.add(impact)
+        elif self.impact_type == 'plasma_burn_green':
+            impact = PlasmaImpact(self.end, colour='green')
             G.DECALS.add(impact)
 
 class ProjectileBullet(Projectile):
@@ -168,8 +172,17 @@ class ProjectilePlasmaRifle(Projectile):
             self.done = True
             self.kill()
 
-class ProjectileShredder(Projectile):
-    pass
+
+class ProjectilePlasmaPistol(ProjectilePlasmaRifle):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
+        super().__init__(start, end, initial_delay)
+        self.colour = (50, 180, 50)
+        self.colourl = (100, 255, 100)
+        self.taill = 7
+        self.dmg = 15
+        self.drawr = 2
+        self.impact_type = 'plasma_burn_green'
+
 
 class ProjectileSpark(ProjectileBolt):
     def __init__(self, start, end = None, initial_delay = 0):
@@ -270,6 +283,9 @@ class ProjectileTracking(Projectile):
         xp, yp = rect_center(target) if self.target is not None else self.end
         self.dx, self.dy = end[0] - xp, end[1] - yp
 
+    def _draw(self):
+        pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+
     def frame(self):
         if self.initial_delay > 0:
             self.initial_delay -= 1
@@ -290,7 +306,7 @@ class ProjectileTracking(Projectile):
         dis, ux, uy = displacement((self.x, self.y), self.end)
         if dis <= self.speed:
             self.x, self.y = self.end
-            pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+            self._draw()
             self._damage()
             self._apply_impact()
             self.done = True
@@ -298,7 +314,8 @@ class ProjectileTracking(Projectile):
             return
         self.x += ux * self.speed
         self.y += uy * self.speed
-        pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+        self._draw()
+
 
 
 class ProjectileNeedler(ProjectileTracking):
@@ -333,26 +350,62 @@ class ProjectileNeedler(ProjectileTracking):
         self.end = dstx, dsty
         dis, ux, uy = displacement((self.x, self.y), self.end)
         if dis <= self.speed:
-            self.x, self.y = self.end
-            pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+            self._draw(ux, uy, True)
             self._damage()
-            # Apply impact
-            circle_params = (self.colour, (self.x, self.y), self.drawr)
-            line_params = (self.tail_colour, (self.x, self.y),
-                         (self.x - ux*self.tail_len, self.y - uy*self.tail_len))
-            impact = NeedlerImpact(self.end, circle_params=circle_params, line_params=line_params)
-            G.DECALS.add(impact)
             self.done = True
             self.kill()
             return
         self.x += ux * self.speed
         self.y += uy * self.speed
-        # pygame.draw.aaline(G.WINDOW, self.colourl, (self.x, self.y),
-        #                 (self.x - ux*self.lenl, self.y- uy*self.lenl))
+        self._draw(ux, uy)
+
+    def _draw(self, ux, uy, end=False):
+        if end:
+            self.x, self.y = self.end
+            pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
+            circle_params = (self.colour, (self.x, self.y), self.drawr)
+            line_params = (self.tail_colour, (self.x, self.y),
+                         (self.x - ux*self.tail_len, self.y - uy*self.tail_len))
+            impact = NeedlerImpact(self.end, circle_params=circle_params, line_params=line_params)
+            G.DECALS.add(impact)
+            return
         pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.drawr)
         pygame.draw.line(G.WINDOW, self.tail_colour, (self.x, self.y),
                          (self.x - ux*self.tail_len, self.y - uy*self.tail_len), width=1)
-        
 
+
+class ProjectilePlasmaOvercharge(ProjectileNeedler):
+    def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0,
+                 target: pygame.Rect = None):
+        super().__init__(start, end, initial_delay, target)
+        self.cr = 1
+        self.ccolour = (127, 255, 127)
+        self.r = 3
+        self.colour = (100, 200, 100)
+
+        self.taill = 20
+        self.taills = 5
+        self.tailc = (80, 180, 80)
+
+        self.damage = 80
+        self.speed = 7
+
+        self.spark_prob = 10 / G.FPS
+        # self.sparks = deque() # deque of coordinates
+        self.sparkr = 1
+
+    def _draw(self, ux, uy, end=False):
+        if end:
+            self.x, self.y = self.end
+        pygame.draw.circle(G.WINDOW, self.colour, (self.x, self.y), self.r)
+        pygame.draw.circle(G.WINDOW, self.ccolour, (self.x, self.y), self.cr)
+
+        pygame.draw.line(G.WINDOW, self.tailc, (self.x, self.y),
+                         (self.x - ux*self.taill, self.y - uy*self.taill), width=self.cr)
+        pygame.draw.line(G.WINDOW, self.ccolour, (self.x, self.y),
+                         (self.x - ux*self.taills, self.y - uy*self.taills), width=1)
+        if random() < self.spark_prob:
+            spark = DecalPoint((self.x, self.y), colour=self.ccolour, r=1)
+            G.DECALS.add(spark)
 
 

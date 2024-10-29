@@ -74,7 +74,8 @@ class EnemyCharacterAI(CharacterAI):
         self.char.dstx = self.char.x
         self.char.dsty = G.HEIGHT + 100
         G.CHARS_ALL.add(self.char)
-        self.weapon = choice((WeapNeedler(), WeapPlasmaRifle()))
+        self.weapon = choice((WeapNeedler(), WeapPlasmaRifle(), WeapPlasmaPistol()))
+        self.weapon = WeapPlasmaPistol()
         self.weapon_manager = WeaponManager(self.char, self.weapon)
 
     def _update_desination(self):

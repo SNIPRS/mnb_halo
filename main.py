@@ -38,7 +38,6 @@ def main():
         for eff in G.FIRING_EFFECTS:
             eff.frame()
 
-
         pygame.display.update()
         G.CLOCK.tick(G.FPS)
 

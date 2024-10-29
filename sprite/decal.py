@@ -17,6 +17,21 @@ class Decal(pygame.sprite.Sprite):
         if self.duration < 0:
             self.kill()
 
+class DecalPoint(Decal):
+    def __init__(self, start: Tuple[float, float], duration: Optional[int] = 0.5 * G.FPS,
+                 colour = 'green', r = 1, decay = True):
+        super().__init__(start, duration)
+        self.start = start
+        self.duration = duration
+        self.colour = colour
+        self.r = r
+        self.alpha = 255
+
+    def frame(self):
+        pygame.draw.circle(G.WINDOW, self.colour, self.start, self.r)
+        self.duration -= 1
+        if self.duration < 0:
+            self.kill()
 
 class DecalBulletCasing(Decal):
     def __init__(self, start: Tuple[float, float], direction: Tuple[float, float], duration: int = 7*G.FPS,
@@ -129,7 +144,7 @@ class PlasmaImpact(Decal):
         fname = f'assets/decals/explosion/plasma_mark/{colour}.png'
         self.imgb = pygame.image.load(fname).convert_alpha()
         self.startb = center_rect(self.imgb.get_rect(), *start)
-        self.startb = self.startb[0]-1, self.startb[1]-1 # idk why
+        self.startb = self.startb[0], self.startb[1] # idk why
         self.decay_timeb = decay_time
         self.alph_decayb = 255 // decay_time
         self.alphb = 255
@@ -214,4 +229,4 @@ class NeedlerImpact(Decal):
             G.PLAY_SOUND(G.SOUNDS['needler_expl'])
             G.DECALS.add(impact)
             self.kill()
-        
+
