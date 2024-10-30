@@ -75,8 +75,26 @@ class EnemyCharacterAI(CharacterAI):
         self.char.dsty = G.HEIGHT + 100
         G.CHARS_ALL.add(self.char)
         self.weapon = choice((WeapNeedler(), WeapPlasmaRifle(), WeapPlasmaPistol()))
-        self.weapon = WeapPlasmaPistol()
         self.weapon_manager = WeaponManager(self.char, self.weapon)
+
+    def _update_desination(self):
+        pass
+
+    def can_kill(self):
+        return self.char.health <= 0 or self.char.y > G.HEIGHT + 10
+
+class GruntHeavyCharacterAI(CharacterAI):
+    def __init__(self):
+        super(CharacterAI, self).__init__()
+        self.char = Enemy((100, 255, 100), G.SPRITE_SIZE, G.SPRITE_SIZE)
+        self.char.x, self.char.y = randint(0, G.WIDTH - self.char.rect.width), - self.char.rect.height - 10
+        self.char.dstx = self.char.x
+        self.char.dsty = randint(50, 200)
+        G.CHARS_ALL.add(self.char)
+        self.weapon = WeapPlasmaCannon()
+        self.weapon_manager = WeaponManager(self.char, self.weapon)
+
+        self.defend_time = 15 * G.FPS
 
     def _update_desination(self):
         pass

@@ -89,7 +89,7 @@ WEAPON_SHOTGUN = {
 
 WEAPON_PLASMA_RIFLE = {
     'mag_cap': 100,
-    'firerate': 12,
+    'firerate': 8,
     'error': 2,
     'aim_time': 2,
     'reload_time': [0, 0],
@@ -104,6 +104,23 @@ WEAPON_PLASMA_RIFLE = {
     'sound_reload': pygame.mixer.Sound("./assets/sounds/silence.wav"),
 
     'firerate_decay': 1.1, # Multiplies the delay between shots
+}
+
+WEAPON_PLASMA_CANNON = {
+    'mag_cap': 200,
+    'firerate': 3,
+    'error': 3,
+    'aim_time': 2,
+    'reload_time': [0, 0],
+    'burst_range': [6, 15],
+    'subburst_probability': 0.25,
+    'subburst_delay': [1.0, 3.0],
+    'spread_heat': 1,
+    'cooldown': [7, 10],
+    'projectile': ProjectilePlasmaRifle,
+
+    'sound_fire': pygame.mixer.Sound("./assets/sounds/pr_fire.wav"),
+    'sound_reload': pygame.mixer.Sound("./assets/sounds/silence.wav"),
 }
 
 WEAPON_PLASMA_PISTOL = {
@@ -150,5 +167,4 @@ WEAPON_FRAG_GRENADE = {
     'error': 12,
     'safe_d': G.UNIT * 8,
     'projectile': ProjectileFragGrenade,
-
 }

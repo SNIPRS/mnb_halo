@@ -147,6 +147,9 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
         self.target_rect = None
         self.burst = min(self.mag, randint(*self.burst_range))
 
+class WeapPlasmaCannon(WeapAssaultRifle):
+    def __init__(self, params = None):
+        super().__init__(params)
 class WeapBattleRifle(WeapAssaultRifle):
     def __init__(self, params: Optional[dict] = WEAPON_BATTLE_RIFLE):
         super().__init__(params)
