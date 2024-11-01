@@ -14,8 +14,10 @@ class Spotter:
         self.current_target = None
         self.attached = attached
 
-    def frame(self) -> Union[None, Character]:
+    def frame(self, spot: bool = False) -> Union[None, Character]:
         self.spotting_timer -= 1
+        if spot:
+            self.spotting_timer = 0
         if self.spotting_timer <= 0:
             self.current_target = self._get_target()
             self.spotting_timer = randint(*self.spotting_updates)
@@ -24,7 +26,7 @@ class Spotter:
                 self.current_target = None
         return self.current_target
 
-    def _get_target(self) -> Union[None, Character]:
+    def _get_target(self, random_p: float = 0.5) -> Union[None, Character]:
         # Closest prob 1/2 random probability 1/2
         dis = numpy.inf
         res = None
@@ -39,7 +41,7 @@ class Spotter:
                 rand = other
             N += 1
 
-        return res if random() <= 0.5 or rand is None else rand
+        return res if random() <= random_p or rand is None else rand
 
     def valid_target(self, actor: Union[None, Character], other: Union[None, Character]) -> bool:
         if actor is None or other is None or other.health < 0:

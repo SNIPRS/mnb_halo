@@ -3,7 +3,7 @@ import numpy as np
 from typing import Optional, Tuple
 
 import G
-from utils import displacement, displacement_theta, center_rect, rect_center
+from utils import displacement, displacement_theta, center_rect, rect_center, distance
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, colour, width: float, height: float):
@@ -67,15 +67,16 @@ class Character(pygame.sprite.Sprite):
         elif mag <= self.hitbox_radius * self.pinr_multiplier:
             self.pin_health = max(self.pin_health - dmg, self.min_pin_health)
 
-    def move(self, move: Optional[bool]=True):
+    def move(self, move: Optional[bool]=True) -> bool:
         # Moves a single step towards destination
-        MOVE_THRESHOLD = 3
         dis, dx, dy, self.theta = displacement_theta((self.x, self.y), (self.dstx, self.dsty))
-        if dis <= MOVE_THRESHOLD:
-            return
+        if dis <= G.MOVE_THRESHOLD:
+            return False
         if move:
             self.x += dx * self.speed
             self.y += dy * self.speed
+            return True
+        return False
 
 
     def draw(self):

@@ -16,6 +16,8 @@ class Weapon:
         self.cooldown = [1, 1]
         self.target_rect = None
         self.error = 0
+        self.sample_error = 0
+        self.subburst = False
 
     def start_burst(self):
         pass
@@ -26,10 +28,12 @@ class Weapon:
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         pass
 
-    def _target_point(self, start: Tuple[float, float], end: Tuple[float, float]) -> Tuple[float, float]:
+    def _target_point(self, start: Tuple[float, float], end: Tuple[float, float], err: float = None) -> Tuple[float, float]:
         dis, _, _ = displacement(start, end)
         # Not a uniform sampler!
-        r = dis * tan(G.DEGREE_TO_RAD * self.error) * random()
+        if err is None:
+            err = self.error
+        r = dis * tan(G.DEGREE_TO_RAD * err) * random()
         theta = random() * 2 * G.PI
         return end[0] + r*cos(theta), end[1] + r*sin(theta)
 
@@ -38,6 +42,7 @@ class Weapon:
 
 class WeapAssaultRifle(Weapon): # Placeholder MA5B
     def __init__(self, params: Optional[dict] = None):
+        super().__init__()
         if params is not None:
             self.init_params(params)
             return
@@ -105,6 +110,7 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
     def frame(self, start: Optional[Tuple[float, float]] = None, end: Optional[Tuple[float, float]] = None):
         if self.firing:
             if self.firing_timer <= 0 and self.burst > 0 and start is not None and end is not None:
+                self.subburst = False
                 self._shot(start, end)
                 self.burst -= 1
                 self.mag -= 1
@@ -112,6 +118,7 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
                 self.firing_timer = self.firerate + randint(*self.subburst_delay) if subburst \
                     else self.firerate
                 self.spread = self.error if subburst else self.spread + self.spread_heat
+                self.subburst = subburst
             if self.mag <= 0:
                 self.firing = False
                 self.reload_timer = randint(*self.reload_time)
@@ -147,9 +154,6 @@ class WeapAssaultRifle(Weapon): # Placeholder MA5B
         self.target_rect = None
         self.burst = min(self.mag, randint(*self.burst_range))
 
-class WeapPlasmaCannon(WeapAssaultRifle):
-    def __init__(self, params = None):
-        super().__init__(params)
 class WeapBattleRifle(WeapAssaultRifle):
     def __init__(self, params: Optional[dict] = WEAPON_BATTLE_RIFLE):
         super().__init__(params)
@@ -216,6 +220,13 @@ class WeapPlasmaRifle(WeapAssaultRifle):
         proj = self.projectile(start, end)
         G.FIRING_EFFECTS.add(proj)
         self.firerate = int(min(self.firerate_orig * 2, self.firerate * self.firerate_decay))
+
+
+class WeapPlasmaCannon(WeapAssaultRifle):
+    def __init__(self, params = WEAPON_PLASMA_CANNON):
+        super().__init__(params)
+        self.sample_error = params['sample_error']
+
 
 class WeapPlasmaPistol(WeapAssaultRifle):
     def __init__(self):

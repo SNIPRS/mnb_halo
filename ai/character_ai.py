@@ -90,14 +90,29 @@ class GruntHeavyCharacterAI(CharacterAI):
         self.char.x, self.char.y = randint(0, G.WIDTH - self.char.rect.width), - self.char.rect.height - 10
         self.char.dstx = self.char.x
         self.char.dsty = randint(50, 200)
+        self.dy = randint(100, 200)
+        self.stay_time = (40 * G.FPS, 60 * G.FPS)
+        self.stay_timer = randint(*self.stay_time)
         G.CHARS_ALL.add(self.char)
         self.weapon = WeapPlasmaCannon()
         self.weapon_manager = WeaponManager(self.char, self.weapon)
 
         self.defend_time = 15 * G.FPS
 
-    def _update_desination(self):
-        pass
+
+    def frame(self):
+        self._update_desination()
+        self.char.frame()
+        if self.char.pinned() or self.char.health <= 0:
+            return
+        if not self.char.move():
+            if self.stay_timer <= 0:
+                self.char.dsty += randint(*self.dy)
+                self.stay_timer = randint(*self.stay_time)
+                self.weapon.stop_burst()
+                return
+            self.stay_timer -= 1
+            self.weapon_manager.frame()
 
     def can_kill(self):
         return self.char.health <= 0 or self.char.y > G.HEIGHT + 10

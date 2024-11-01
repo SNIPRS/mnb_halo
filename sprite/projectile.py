@@ -67,6 +67,7 @@ class Projectile(pygame.sprite.Sprite):
             impact = PlasmaImpact(self.end, type=self.impact_type)
             G.DECALS.add(impact)
 
+
 class ProjectileBullet(Projectile):
     def __init__(self, start: Tuple[float, float], end: Tuple[float, float], initial_delay: int=0):
         super().__init__(start, end, initial_delay)

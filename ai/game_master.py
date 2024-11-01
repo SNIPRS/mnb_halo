@@ -1,7 +1,9 @@
 import pygame
 
 import G
-from ai.character_ai import EnemyCharacterAI, ControllableCharacterAI
+
+from random import choice
+from ai.character_ai import *
 
 class EnemyManager:
     def __init__(self):
@@ -19,7 +21,9 @@ class EnemyManager:
             self.cleanup_timer = self.max_cleanup_timer
 
     def _spawn_enemy(self):
-        enemy = EnemyCharacterAI()
+        enemy = choice((EnemyCharacterAI(),
+                        GruntHeavyCharacterAI(),
+                        ))
         G.CHAR_AI_ALL.add(enemy)
 
     def _cleanup(self):

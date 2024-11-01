@@ -23,6 +23,7 @@ CHAR_AI_ALL = pygame.sprite.Group()
 
 SPRITE_SIZE = 15
 UNIT = SPRITE_SIZE
+MOVE_THRESHOLD = 3
 
 FIRING_EFFECTS = pygame.sprite.Group()
 DECALS = pygame.sprite.Group()
